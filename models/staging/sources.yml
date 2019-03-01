@@ -1,0 +1,48 @@
+version: 2
+
+sources:
+  - name: raw_jaffle_shop
+    description: A replica of the postgres database used to power the jaffle_shop app.
+    tables:
+      - name: customers
+        columns:
+          - name: id
+            description: Primary key of the table
+            tests:
+              - unique
+              - not_null
+
+      - name: orders
+        columns:
+          - name: id
+            description: Primary key of the table
+            tests:
+              - unique
+              - not_null
+
+          - name: user_id
+            description: Foreign key to customers
+
+          - name: status
+            tests:
+              - accepted_values:
+                  values: ['placed', 'shipped', 'completed', 'return_pending', 'returned']
+
+      - name: payments
+        columns:
+          - name: id
+            description: Primary key of the table
+            tests:
+              - not_null
+              - unique
+
+          - name: order_id
+            description: Foreign key to orders
+
+          - name: payment_method
+            tests:
+              - accepted_values:
+                  values: ['credit_card', 'coupon', 'bank_transfer', 'gift_card']
+
+          - name: amount
+            description: Amount in cents
