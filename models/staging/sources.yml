@@ -3,8 +3,18 @@ version: 2
 sources:
   - name: raw_jaffle_shop
     description: A replica of the postgres database used to power the jaffle_shop app.
+
+    freshness:
+      warn_after:
+        period: hour
+        count: 12
+      error_after:
+        period: hour
+        count: 24
+
     tables:
       - name: customers
+        loaded_at_field: _elt_updated_at
         columns:
           - name: id
             description: Primary key of the table
@@ -13,6 +23,7 @@ sources:
               - not_null
 
       - name: orders
+        loaded_at_field: _elt_updated_at
         columns:
           - name: id
             description: Primary key of the table
@@ -29,6 +40,7 @@ sources:
                   values: ['placed', 'shipped', 'completed', 'return_pending', 'returned']
 
       - name: payments
+        loaded_at_field: _elt_updated_at
         columns:
           - name: id
             description: Primary key of the table
