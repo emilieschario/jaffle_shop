@@ -31,8 +31,8 @@ To get up and running with this project:
 
 3. Change into the `jaffle_shop` directory from the command line:
 
-```bash
-$ cd jaffle_shop
+```cmd
+> cd jaffle_shop
 ```
 
 4. Set up a profile called `jaffle_shop` to connect to a data warehouse by
@@ -52,41 +52,41 @@ set DBT_PROFILES_DIR=C:\Users\sungwon.chung\Desktop\repos\dbt_bigquery_example
 rem connect to GCP
 gcloud auth application-default login --scopes=https://www.googleapis.com/auth/userinfo.email,https://www.googleapis.com/auth/cloud-platform,https://www.googleapis.com/auth/drive.readonly
 
-$ dbt debug
+> dbt debug
 ```
 
 6. Load the CSVs with the demo data set. This materializes the CSVs as tables in
    your target schema. Note that a typical dbt project **does not require this
    step** since dbt assumes your raw data is already in your warehouse.
 
-```bash
-$ dbt seed
+```cmd
+> dbt seed
 ```
 
 7. Run the models:
 
-```bash
-$ dbt run
+```cmd
+> dbt run
 ```
 
 > **NOTE:** If this steps fails, it might be that you need to make small changes to the SQL in the models folder to adjust for the flavor of SQL of your target database. Definitely consider this if you are using a community-contributed adapter.
 
 8. Test the output of the models:
 
-```bash
-$ dbt test
+```cmd
+> dbt test
 ```
 
 9. Generate documentation for the project:
 
-```bash
-$ dbt docs generate
+```cmd
+> dbt docs generate
 ```
 
 10. View the documentation for the project:
 
-```bash
-$ dbt docs serve
+```cmd
+> dbt docs serve
 ```
 
 ### What is a jaffle?
