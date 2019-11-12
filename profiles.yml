@@ -1,0 +1,14 @@
+# Note that only one of these targets is required
+
+jaffle_shop:
+  target: dev
+  outputs:
+    dev:
+      type: bigquery
+      method: oauth
+      project: wam-bam-258119
+      dataset: "schema" # You can also use "schema" here
+      threads: 4
+      timeout_seconds: 300
+      location: US # Optional, one of US or EU
+      priority: interactive
