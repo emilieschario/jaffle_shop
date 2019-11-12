@@ -29,10 +29,10 @@ To get up and running with this project:
 
 2. Clone this repository. If you need extra help, see [these instructions](https://docs.getdbt.com/docs/use-an-existing-project).
 
-3. Change into the `jaffle_shop` directory from the command line:
+3. Change into the `dbt_bigquery_example` directory from the command line:
 
 ```cmd
-> cd jaffle_shop
+> cd dbt_bigquery_example
 ```
 
 4. Set up a profile called `jaffle_shop` to connect to a data warehouse by
