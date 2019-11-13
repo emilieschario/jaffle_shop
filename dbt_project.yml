@@ -39,11 +39,10 @@ models:
       # schema: core # (uncomment if you create a dataset based on model sub directory)
     staging:
       materialized: view
+      tags: ["staging", "hourly"]
       # example CLI commands for how to utilize tagged models
       # https://docs.getdbt.com/docs/tags#section-selecting-models-with-tags
       # Run all models tagged "nightly"
       # dbt run --model tag:nightly
-
       # Run all models tagged "nightly", except those that are tagged hourly
       # dbt run --model tag:nightly --exclude tag:hourly
-      tags: ["staging", "hourly"]
