@@ -84,6 +84,8 @@ rem creates tables/views based off the sql and yml files
 
 runs through all the tests defined in this specific file: [schema.yml](/models/core/schema.yml)
 
+> Note: follow this [git guide](https://github.com/fishtown-analytics/corp/blob/master/git-guide.md) for merge requests
+
 ```cmd
 rem runs through all the tests defined in the above file by
 rem generating SQL for out of the box functionality such as not_null and unique fields
