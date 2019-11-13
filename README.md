@@ -23,6 +23,8 @@ This [dbt](https://www.getdbt.com/) project has a split personality:
 
 ### Using this project as a tutorial
 
+> Note: Likely use [Airflow's BashOperator](https://docs.getdbt.com/docs/running-dbt-in-production#section-using-airflow) for production deployments
+
 To get up and running with this project:
 
 1. Install dbt using [these instructions](https://docs.getdbt.com/docs/installation).
