@@ -1,7 +1,8 @@
-
-name: 'jaffle_shop'
-version: '0.1'
-profile: 'jaffle_shop'
+name: "jaffle_shop"
+# Specify a requirement on an _exact_ version of dbt
+require-dbt-version: "0.14.4"
+version: "0.1"
+profile: "jaffle_shop"
 source-paths: ["models"]
 analysis-paths: ["analysis"]
 test-paths: ["tests"]
@@ -10,13 +11,23 @@ macro-paths: ["macros"]
 
 target-path: "target"
 clean-targets:
-    - "target"
-    - "dbt_modules"
-    - "logs"
+  - "target"
+  - "dbt_modules"
+  - "logs"
 
+quoting:
+  database: true # translates to gcp project
+  identifier: true
+  schema: true # translates to gcp dataset
+
+# https://docs.getdbt.com/docs/configuring-incremental-models
 models:
+  persist_docs: #allows for docs to flow through to BigQuery console tables/views
+    relation: true
   jaffle_shop:
-      materialized: table
-      staging:
-        materialized: view
-        tags: ["staging", "hourly"]
+    core:
+      materialized: table #https://docs.getdbt.com/docs/materializations
+      schema: core
+    staging:
+      materialized: view
+      tags: ["staging", "hourly"]
