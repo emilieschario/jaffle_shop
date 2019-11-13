@@ -15,6 +15,15 @@ clean-targets:
   - "dbt_modules"
   - "logs"
 
+# Use hooks to grant permissions to SQL table readers
+# https://docs.getdbt.com/docs/hooks
+
+# example hook for audit tables before and after model runs
+# models:
+#   project-name:
+#     pre-hook: "insert into _dbt.audit (event_name, event_timestamp, event_schema, event_model) values ( 'starting model deployment', getdate(), '{{this.schema}}', '{{this.name}}')"
+#     post-hook: "insert into _dbt.audit (event_name, event_timestamp, event_schema, event_model) values ( 'completed model deployment', getdate(), '{{this.schema}}', '{{this.name}}')"
+
 quoting:
   database: true # translates to gcp project
   identifier: true
@@ -30,6 +39,7 @@ models:
       # schema: core # (uncomment if you create a dataset based on model sub directory)
     staging:
       materialized: view
+      # example CLI commands for how to utilize tagged models
       # https://docs.getdbt.com/docs/tags#section-selecting-models-with-tags
       # Run all models tagged "nightly"
       # dbt run --model tag:nightly
