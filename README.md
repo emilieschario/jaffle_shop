@@ -62,6 +62,8 @@ gcloud auth application-default login --scopes=https://www.googleapis.com/auth/u
    your target schema. Note that a typical dbt project **does not require this
    step** since dbt assumes your raw data is already in your warehouse.
 
+> Note: You'll likely use [sources](https://docs.getdbt.com/docs/using-sources#section-defining-sources) in your `schema.yml` files because dbt assumes data is already loaded into your warehouse
+
 ```cmd
 rem see a full breakdown of how dbt is creating tables in bigquery based on the csv files in the data directory
 > dbt seed --show
