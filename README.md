@@ -67,8 +67,10 @@ rem see a full breakdown of how dbt is creating tables in bigquery based on the 
 
 7. Run the models:
 
+Based on files in this directory: [models](/models)
+
 ```cmd
-rem creates tables/views based off the sql and yml files in this directory [models](/models)
+rem creates tables/views based off the sql and yml files
 > dbt run
 ```
 
