@@ -47,6 +47,7 @@ To get up and running with this project:
 
 ```cmd
 rem set the profiles directory in an environment variable, so debug points to the right files
+rem replace the below with your own repo directory
 set DBT_PROFILES_DIR=C:\Users\sungwon.chung\Desktop\repos\dbt_bigquery_example
 
 rem connect to GCP
@@ -60,12 +61,14 @@ gcloud auth application-default login --scopes=https://www.googleapis.com/auth/u
    step** since dbt assumes your raw data is already in your warehouse.
 
 ```cmd
-> dbt seed
+rem see a full breakdown of how dbt is creating tables in bigquery based on the csv files in the data directory
+> dbt seed --show
 ```
 
 7. Run the models:
 
 ```cmd
+rem creates tables/views based off the sql and yml files in this directory [models](/models)
 > dbt run
 ```
 
@@ -73,19 +76,25 @@ gcloud auth application-default login --scopes=https://www.googleapis.com/auth/u
 
 8. Test the output of the models:
 
+runs through all the tests defined in this specific file: [schema.yml](/models/core/schema.yml)
+
 ```cmd
+rem runs through all the tests defined in the above file by
+rem generating SQL for out of the box functionality such as not_null and unique fields
 > dbt test
 ```
 
 9. Generate documentation for the project:
 
 ```cmd
+rem sets up the files based on logs from the above run to eventually serve in a static website
 > dbt docs generate
 ```
 
 10. View the documentation for the project:
 
 ```cmd
+rem launches an easy-to-use static website to navigate data lineage and understand table structures
 > dbt docs serve
 ```
 
