@@ -82,7 +82,7 @@ rem creates tables/views based off the sql and yml files
 
 8. Test the output of the models:
 
-runs through all the tests defined in this specific file: [schema.yml](/models/core/schema.yml)
+runs through all the tests defined in these specific file: [models/core/schema.yml](/models/core/schema.yml), [models/staging/schema.yml](/models/staging/schema.yml)
 
 > Note: follow this [git guide](https://github.com/fishtown-analytics/corp/blob/master/git-guide.md) for merge requests
 
