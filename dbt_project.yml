@@ -8,6 +8,7 @@ analysis-paths: ["analysis"]
 test-paths: ["tests"]
 data-paths: ["data"]
 macro-paths: ["macros"]
+snapshot-paths: ["snapshots"] # https://docs.getdbt.com/docs/snapshots#section-what-are-snapshots-
 
 target-path: "target"
 clean-targets:
