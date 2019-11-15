@@ -9,7 +9,7 @@ jaffle_shop:
       method: oauth # for production runs: https://docs.getdbt.com/docs/profile-bigquery#section-service-account-file-authentication
       project: wam-bam-258119
       dataset: dbt_bq_example # You can also use "schema" here
-      threads: 10 # https://docs.getdbt.com/docs/configure-your-profile#section-understanding-threads
+      threads: 8 # https://docs.getdbt.com/docs/configure-your-profile#section-understanding-threads
       timeout_seconds: 300
       location: US # Optional, one of US or EU
       priority: interactive # interactive or batch
