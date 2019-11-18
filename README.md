@@ -90,6 +90,10 @@ runs through all the tests defined in these specific file: [models/core/schema.y
 rem runs through all the tests defined in the above file by
 rem generating SQL for out of the box functionality such as not_null and unique fields
 > dbt test
+
+rem run specific types of tests
+> dbt test --schema
+> dbt test --data
 ```
 
 9. Generate documentation for the project:
