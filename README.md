@@ -76,6 +76,15 @@ Based on files in this directory: [models](/models)
 ```cmd
 rem creates tables/views based off the sql and yml files
 > dbt run
+
+rem example CLI commands for how to utilize tagged models
+rem https://docs.getdbt.com/docs/tags#section-selecting-models-with-tags
+rem Run all models tagged "staging"
+> dbt run --model tag:staging
+
+rem Run all models tagged "staging", except those that are tagged hourly
+rem should give a warning that nothing will run
+> dbt run --model tag:staging --exclude tag:hourly
 ```
 
 > **NOTE:** If this steps fails, it might be that you need to make small changes to the SQL in the models folder to adjust for the flavor of SQL of your target database. Definitely consider this if you are using a community-contributed adapter.
