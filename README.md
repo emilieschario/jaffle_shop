@@ -85,6 +85,13 @@ rem Run all models tagged "staging"
 rem Run all models tagged "staging", except those that are tagged hourly
 rem should give a warning that nothing will run
 > dbt run --model tag:staging --exclude tag:hourly
+
+rem Run all of the models downstream of a source
+> dbt run --model source:dbt_bq_example+
+
+rem Run all of the models downstream of a specific source table
+rem nothing will happen because the DAGs are dependent on other upstream tables
+> dbt run --model source:dbt_bq_example.raw_orders+
 ```
 
 > **NOTE:** If this steps fails, it might be that you need to make small changes to the SQL in the models folder to adjust for the flavor of SQL of your target database. Definitely consider this if you are using a community-contributed adapter.
