@@ -1,5 +1,12 @@
 version: 2
 
+sources:
+  - name: dbt_bq_example
+    tables:
+      - name: raw_customers
+      - name: raw_orders
+      - name: raw_payments
+
 models:
   - name: dim_customers
     description: This table has basic information about a customer, as well as some derived facts based on a customer's orders
@@ -10,13 +17,13 @@ models:
         tests:
           - unique
           - not_null
-
+      # not in the table due to being PII but still documented in the model
       - name: first_name
         description: Customer's first name. PII.
-
+      # not in the table due to being PII but still documented in the model
       - name: last_name
         description: Customer's last name. PII.
-
+      # not in the table due to being PII but still documented in the model
       - name: email
         description: Customer's email address. PII.
 
@@ -57,7 +64,8 @@ models:
         description: '{{ doc("orders_status") }}'
         tests:
           - accepted_values:
-              values: ['placed', 'shipped', 'completed', 'return_pending', 'returned']
+              values:
+                ["placed", "shipped", "completed", "return_pending", "returned"]
 
       - name: amount
         description: Total amount (AUD) of the order
