@@ -110,6 +110,12 @@ rem generating SQL for out of the box functionality such as not_null and unique 
 rem run specific types of tests
 > dbt test --schema
 > dbt test --data
+
+rem test freshness of source data
+> dbt source snapshot-freshness
+
+# Snapshot freshness for all dataset tables:
+> dbt source snapshot-freshness --select dbt_bq_example
 ```
 
 9. Generate documentation for the project:
