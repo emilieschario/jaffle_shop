@@ -37,7 +37,8 @@ models:
   jaffle_shop:
     core:
       materialized: table #https://docs.getdbt.com/docs/materializations
-      # schema: core # (uncomment if you create a dataset based on model sub directory)
+      # schema: core # (uncomment if you create table names based on model sub directory. 
+      # ex: this will append "_core" to the sql tables in the "core" subdirectory )
     staging:
       materialized: view
       tags: ["staging", "hourly"]
