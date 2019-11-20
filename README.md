@@ -114,7 +114,7 @@ rem run specific types of tests
 rem test freshness of source data
 > dbt source snapshot-freshness
 
-# Snapshot freshness for all dataset tables:
+rem Snapshot freshness for all dataset tables:
 > dbt source snapshot-freshness --select dbt_bq_example
 ```
 
