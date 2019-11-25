@@ -134,6 +134,35 @@ rem launches an easy-to-use static website to navigate data lineage and understa
 
 > Note: [dbt style guide](https://github.com/fishtown-analytics/corp/blob/master/dbt_coding_conventions.md)
 
+11. Incremental updates to existing tables: [click here](https://docs.getdbt.com/docs/configuring-incremental-models#section-what-if-the-columns-of-my-incremental-model-change-)
+
+```sql
+-- Incremental models are built as tables in your data warehouse – the first time a model is run, the table is built by transforming all rows of source data. On subsequent runs, dbt transforms only the rows in your source data that you tell dbt to filter for, inserting them into the table that has already been built (the target table)
+
+-- Typical scenario: get new, daily raw data into source table with billions of rows, then the incremental dbt model will filter for the new data in that raw source table and transform it into the target table
+
+-- models/stg_events.sql example
+-- expected output: the stg_events existing table will have updated, transformed data from raw_app_data.events
+{{
+    config(
+        materialized='incremental'
+    )
+}}
+
+select
+    *,
+    my_slow_function(my_column)
+    
+from raw_app_data.events
+
+{% if is_incremental() %}
+
+  -- this filter will only be applied on an incremental run
+  where event_time > (select max(event_time) from {{ this }})
+
+{% endif %}
+```
+
 ### What is a jaffle?
 
 A jaffle is a toasted sandwich with crimped, sealed edges. Invented in Bondi in 1949, the humble jaffle is an Australian classic. The sealed edges allow jaffle-eaters to enjoy liquid fillings inside the sandwich, which reach temperatures close to the core of the earth during cooking. Often consumed at home after a night out, the most classic filling is tinned spaghetti, while my personal favourite is leftover beef stew with melted cheese.
