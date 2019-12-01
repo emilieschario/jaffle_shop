@@ -1,3 +1,12 @@
+# build dbt docker image to run dbt cli commands
+# dbt debug
+# dbt seed --show
+# dbt run
+# dbt test
+# dbt docs generate
+# build the dbt docs nginx docker image
+# launch the website on cloud run
+
 steps:
   - id: "build and push first docker image"
     name: "gcr.io/cloud-builders/gcloud"
@@ -18,21 +27,4 @@ steps:
         "--platform",
         "managed",
         "--allow-unathenticated",
-      ]
-
-  - id: "upgrade container memory limit"
-    name: "gcr.io/cloud-builders/gcloud"
-    args:
-      [
-        "beta",
-        "run",
-        "services",
-        "update",
-        "tf-dash-cloud-run-demo",
-        "--memory",
-        "1Gi",
-        "--region",
-        "us-central1",
-        "--platform",
-        "managed",
       ]
