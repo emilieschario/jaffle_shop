@@ -1,0 +1,38 @@
+steps:
+  - id: "build and push first docker image"
+    name: "gcr.io/cloud-builders/gcloud"
+    args: ["builds", "submit", "--tag", "gcr.io/$PROJECT_ID/dbt-docs-cloud-run"]
+
+  - id: "launch dbt docs static website"
+    name: "gcr.io/cloud-builders/gcloud"
+    args:
+      [
+        "beta",
+        "run",
+        "deploy",
+        "dbt-docs-cloud-run",
+        "--image",
+        "gcr.io/$PROJECT_ID/dbt-docs-cloud-run:latest",
+        "--region",
+        "us-central1",
+        "--platform",
+        "managed",
+        "--allow-unathenticated",
+      ]
+
+  - id: "upgrade container memory limit"
+    name: "gcr.io/cloud-builders/gcloud"
+    args:
+      [
+        "beta",
+        "run",
+        "services",
+        "update",
+        "tf-dash-cloud-run-demo",
+        "--memory",
+        "1Gi",
+        "--region",
+        "us-central1",
+        "--platform",
+        "managed",
+      ]
