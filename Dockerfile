@@ -1,19 +1,13 @@
-#WSGI compliant docker image for fast flask web app performance
-FROM tiangolo/meinheld-gunicorn-flask:python3.7
+# tutorial: https://medium.com/google-cloud/how-to-run-a-static-site-on-google-cloud-run-345713ca4b40
+# Use a nginx Docker image
+FROM nginx
 
-# Copy local code to the container image.
-ENV APP_HOME /app
-WORKDIR $APP_HOME
+# Copy the static dbt docs HTMLs to the nginx directory
+# Created using the command `dbt docs generate`
+COPY ./target/ /usr/share/nginx/html
 
-#copy current directory to target container directory
-COPY . .
+# Copy the nginx configuration template to the nginx config directory
+COPY ./docs_website/default.template /etc/nginx/conf.d/default.template
 
-#install packages/dependencies
-RUN pip install --trusted-host pypi.python.org -r requirements.txt
-
-# Run the web service on container startup. Here we use the gunicorn
-# webserver, with one worker process and 8 threads.
-# For environments with multiple CPU cores, increase the number of workers
-# to be equal to the cores available.
-# https://community.plot.ly/t/error-with-gunicorn/8247
-CMD exec gunicorn --bind :8080 --workers 1 --threads 8 app:app.server
+# Substitute the environment variables and generate the final config
+CMD envsubst < /etc/nginx/conf.d/default.template > /etc/nginx/conf.d/default.conf && exec nginx -g 'daemon off;'
