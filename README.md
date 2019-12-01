@@ -136,6 +136,7 @@ rem launches an easy-to-use static website to navigate data lineage and understa
 
 ```bash
 # build the docker image locally and tag it to eventually push to container registry
+# does not take into account gitignore constraints given it's built locally
 # ex: docker build . --tag gcr.io/wam-bam-258119/dbt-docs-cloud-run
 docker build . --tag gcr.io/[PROJECT-ID]/[IMAGE]
 
