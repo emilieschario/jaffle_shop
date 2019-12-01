@@ -3,7 +3,7 @@
 FROM nginx
 
 # Copy the static dbt docs HTMLs to the nginx directory
-# Created using the command `dbt docs generate`
+# target directory created using the command `dbt docs generate`
 COPY ./target/ /usr/share/nginx/html
 
 # Copy the nginx configuration template to the nginx config directory
