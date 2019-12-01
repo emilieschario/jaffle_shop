@@ -132,6 +132,34 @@ rem launches an easy-to-use static website to navigate data lineage and understa
 > dbt docs serve
 ```
 
+11. Deploy documentation as a public website on GCP Cloud Run
+
+```bash
+# build the docker image locally and tag it to eventually push to container registry
+# ex: docker build . --tag gcr.io/wam-bam-258119/dbt-docs-cloud-run
+docker build . --tag gcr.io/[PROJECT-ID]/[IMAGE]
+
+# configure gcloud CLI to push to container registry
+gcloud auth configure-docker
+
+# push locally built image to container registry
+# ex: docker push gcr.io/wam-bam-258119/dbt-docs-cloud-run
+docker push gcr.io/[PROJECT-ID]/[IMAGE]
+
+# deploy to docker image to cloud run as a public website
+# ex:
+# gcloud beta run deploy dbt-docs-cloud-run \
+# --image gcr.io/wam-bam-258119/dbt-docs-cloud-run \
+# --region us-central1 \
+# --platform managed \
+# --allow-unauthenticated
+gcloud beta run deploy dbt-docs-cloud-run \
+--image gcr.io/[PROJECT-ID]/[IMAGE] \
+--region [REGION] \
+--platform managed \
+--allow-unauthenticated
+```
+
 > Note: [dbt style guide](https://github.com/fishtown-analytics/corp/blob/master/dbt_coding_conventions.md)
 
 11. Incremental updates to existing tables: [click here](https://docs.getdbt.com/docs/configuring-incremental-models#section-what-if-the-columns-of-my-incremental-model-change-)
@@ -152,7 +180,7 @@ rem launches an easy-to-use static website to navigate data lineage and understa
 select
     *,
     my_slow_function(my_column)
-    
+
 from raw_app_data.events
 
 {% if is_incremental() %}
