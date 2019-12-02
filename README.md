@@ -33,8 +33,8 @@ To get up and running with this project:
 
 3. Change into the `dbt_bigquery_example` directory from the command line:
 
-```cmd
-> cd dbt_bigquery_example
+```bash
+cd dbt_bigquery_example
 ```
 
 4. Set up a profile called `jaffle_shop` to connect to a data warehouse by
@@ -47,15 +47,17 @@ To get up and running with this project:
 
 5. Ensure your profile is setup correctly from the command line:
 
-```cmd
-rem set the profiles directory in an environment variable, so debug points to the right files
-rem replace the below with your own repo directory
-set DBT_PROFILES_DIR=C:\Users\sungwon.chung\Desktop\repos\dbt_bigquery_example
+```bash
+# set the profiles directory in an environment variable, so debug points to the right files
+# replace the below with your own repo directory
+export DBT_PROFILES_DIR=<path to your repository>
+# set DBT_PROFILES_DIR=C:\Users\sungwon.chung\Desktop\repos\dbt_bigquery_example # for windows
 
-rem connect to GCP
+# connect to GCP
 gcloud auth application-default login --scopes=https://www.googleapis.com/auth/userinfo.email,https://www.googleapis.com/auth/cloud-platform,https://www.googleapis.com/auth/drive.readonly
 
-> dbt debug
+# check if the dbt files and connection work
+dbt debug
 ```
 
 6. Load the CSVs with the demo data set. This materializes the CSVs as tables in
@@ -64,34 +66,34 @@ gcloud auth application-default login --scopes=https://www.googleapis.com/auth/u
 
 > Note: You'll likely use [sources](https://docs.getdbt.com/docs/using-sources#section-defining-sources) in your `schema.yml` files because dbt assumes data is already loaded into your warehouse
 
-```cmd
-rem see a full breakdown of how dbt is creating tables in bigquery based on the csv files in the data directory
-> dbt seed --show
+```bash
+# see a full breakdown of how dbt is creating tables in bigquery based on the csv files in the data directory
+dbt seed --show
 ```
 
 7. Run the models:
 
 Based on files in this directory: [models](/models)
 
-```cmd
-rem creates tables/views based off the sql and yml files
-> dbt run
+```bash
+# creates tables/views based off the sql and yml files
+dbt run
 
-rem example CLI commands for how to utilize tagged models
-rem https://docs.getdbt.com/docs/tags#section-selecting-models-with-tags
-rem Run all models tagged "staging"
-> dbt run --model tag:staging
+# example CLI commands for how to utilize tagged models
+# https://docs.getdbt.com/docs/tags#section-selecting-models-with-tags
+# Run all models tagged "staging"
+dbt run --model tag:staging
 
-rem Run all models tagged "staging", except those that are tagged hourly
-rem should give a warning that nothing will run
-> dbt run --model tag:staging --exclude tag:hourly
+# Run all models tagged "staging", except those that are tagged hourly
+# should give a warning that nothing will run
+dbt run --model tag:staging --exclude tag:hourly
 
-rem Run all of the models downstream of a source
-> dbt run --model source:dbt_bq_example+
+# Run all of the models downstream of a source
+dbt run --model source:dbt_bq_example+
 
-rem Run all of the models downstream of a specific source table
-rem nothing will happen because the DAGs are dependent on other upstream tables
-> dbt run --model source:dbt_bq_example.raw_orders+
+# Run all of the models downstream of a specific source table
+# nothing will happen because the DAGs are dependent on other upstream tables
+dbt run --model source:dbt_bq_example.raw_orders+
 ```
 
 > **NOTE:** If this steps fails, it might be that you need to make small changes to the SQL in the models folder to adjust for the flavor of SQL of your target database. Definitely consider this if you are using a community-contributed adapter.
@@ -102,34 +104,34 @@ runs through all the tests defined in these specific file: [models/core/schema.y
 
 > Note: follow this [git guide](https://github.com/fishtown-analytics/corp/blob/master/git-guide.md) for merge requests
 
-```cmd
-rem runs through all the tests defined in the above file by
-rem generating SQL for out of the box functionality such as not_null and unique fields
-> dbt test
+```bash
+# runs through all the tests defined in the above file by
+# generating SQL for out of the box functionality such as not_null and unique fields
+dbt test
 
-rem run specific types of tests
-> dbt test --schema
-> dbt test --data
+# run specific types of tests
+dbt test --schema
+dbt test --data
 
-rem test freshness of source data
-> dbt source snapshot-freshness
+# test freshness of source data
+dbt source snapshot-freshness
 
-rem Snapshot freshness for all dataset tables:
-> dbt source snapshot-freshness --select dbt_bq_example
+# Snapshot freshness for all dataset tables:
+dbt source snapshot-freshness --select dbt_bq_example
 ```
 
 9. Generate documentation for the project:
 
-```cmd
-rem sets up the files based on logs from the above run to eventually serve in a static website
-> dbt docs generate
+```bash
+# sets up the files based on logs from the above run to eventually serve in a static website
+dbt docs generate
 ```
 
 10. View the documentation for the project:
 
-```cmd
-rem launches an easy-to-use static website to navigate data lineage and understand table structures
-> dbt docs serve
+```bash
+# launches an easy-to-use static website to navigate data lineage and understand table structures
+dbt docs serve
 ```
 
 11. Deploy documentation as a public website on GCP Cloud Run
@@ -147,7 +149,7 @@ gcloud auth configure-docker
 # ex: docker push gcr.io/wam-bam-258119/dbt-docs-cloud-run
 docker push gcr.io/[PROJECT-ID]/[IMAGE]
 
-# deploy to docker image to cloud run as a public website
+# deploy docker image to cloud run as a public website
 # ex:
 # gcloud beta run deploy dbt-docs-cloud-run \
 # --image gcr.io/wam-bam-258119/dbt-docs-cloud-run \
