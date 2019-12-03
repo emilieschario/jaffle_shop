@@ -1,6 +1,6 @@
 name: "jaffle_shop"
 # Specify a requirement on an _exact_ version of dbt
-require-dbt-version: "0.14.4"
+require-dbt-version: "0.15.0"
 version: "0.1"
 profile: "jaffle_shop"
 source-paths: ["models"]
