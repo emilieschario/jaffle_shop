@@ -5,4 +5,5 @@ logs/
 **/.DS_Store
 
 #ignore virtual env
-py37_venv 
+py37_venv
+**/service_account.json
