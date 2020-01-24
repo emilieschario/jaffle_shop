@@ -6,10 +6,11 @@ jaffle_shop:
   outputs:
     dev:
       type: bigquery
-      method: oauth # for production runs: https://docs.getdbt.com/docs/profile-bigquery#section-service-account-file-authentication
+      method: service-account # for production runs: https://docs.getdbt.com/docs/profile-bigquery#section-service-account-file-authentication
       project: wam-bam-258119
       dataset: dbt_bq_example # You can also use "schema" here
       threads: 8 # https://docs.getdbt.com/docs/configure-your-profile#section-understanding-threads
+      keyfile: service_account.json
       timeout_seconds: 300
       location: US # Optional, one of US or EU
       priority: interactive # interactive or batch
