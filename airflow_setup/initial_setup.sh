@@ -5,12 +5,13 @@ sudo pip install virtualenv
 virtualenv -p python3 py37_venv
 source py37_venv/bin/activate
 pip install --upgrade pip
-pip install -r requirements.txt --no-cache-dir
+pip install -r requirements.txt
 echo "***********************"
 
 echo "***********************"
 echo "Setup airflow directory environment variable"
 echo "***********************"
+# this must be set in order to add dags over time to a running server
 export AIRFLOW_HOME="$(pwd)"
 
 echo "***********************"
