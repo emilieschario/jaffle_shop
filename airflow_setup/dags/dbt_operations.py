@@ -21,7 +21,7 @@ with DAG(
 
     t2 = DockerOperator(
         task_id="docker_command",
-        image="justsung/dbt_docker:latest",
+        image="dbt_docker:latest",
         api_version="auto",
         auto_remove=True,
         command="dbt debug",
