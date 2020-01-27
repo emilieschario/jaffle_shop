@@ -85,9 +85,18 @@ t2 = DockerOperator(
         "/home/realsww123/dbt_bigquery_example/profiles.yml:/root/.dbt/profiles.yml",
     ],
 )
+
+# update gcp project name in add_gcp_connection.py
+ "extra__google_cloud_platform__project": <your-project-name>
+
+# example
+ "extra__google_cloud_platform__project": "wam-bam-258119"
 ```
 
 ```bash
+# test the specific airflow dbt task
+airflow test dbt_dag docker_command 2020-01-01
+
 # airflow webserver and airflow scheduler has to be launched from separate terminals if running locally in cloud shell
 
 airflow webserver -p 8080
