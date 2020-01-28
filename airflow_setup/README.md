@@ -104,8 +104,7 @@ airflow scheduler
 
 Pre-requisites:
 
-- create a bucket to land raw files
-- create an empty dataset
+- all the above steps
 
 What does the pipeline exactly do?
 
