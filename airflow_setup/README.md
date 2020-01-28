@@ -96,7 +96,7 @@ airflow test dbt_dag docker_command 2020-01-01
 # airflow webserver and airflow scheduler has to be launched from separate terminals if running locally in cloud shell
 airflow webserver -p 8080
 
-# open another terminal
+# run the scheduler to automate all dags
 airflow scheduler
 ```
 
@@ -133,16 +133,13 @@ airflow list_tasks dbt_pipeline --tree
 #                     <Task(BashOperator): success_message>
 
 # run the pipeline manually
-airflow backfill -s 2020-01-01 dbt_pipeline
+airflow backfill dbt_pipeline -s 2020-01-01 -e 2020-01-02
+
+# run the below to view the pipeline in the airflow UI
+# note: cloudshell as it is doesn't like manually triggering from the UI(likely network configs)
+airflow webserver -p 8080
 
 ```
-
-Description:• gcs to bigquery
-• dbt debug
-• dbt test source
-• dbt run:specific table
-• dbt test: specific table
-Move to file to processed bucket.
 
 ## Notes
 
