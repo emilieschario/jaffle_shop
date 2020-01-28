@@ -6,8 +6,8 @@ sources:
     schema: dbt_bq_example
 
     freshness:
-      warn_after: { count: 1, period: day } # 1 day old from time you run the source snapshot command
-      error_after: { count: 2, period: day } # 2 days old from time you run the source snapshot command
+      warn_after: { count: 10, period: day } # 1 day old from time you run the source snapshot command
+      error_after: { count: 1095, period: day } # 2 days old from time you run the source snapshot command
 
     loaded_at_field: order_date
 

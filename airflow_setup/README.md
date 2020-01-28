@@ -18,7 +18,7 @@
 # clone repo
 git clone https://github.com/sungchun12/dbt_bigquery_example.git
 
-# change to  your airflow working directory
+# change to your airflow working directory
 cd dbt_bigquery_example/airflow_setup/
 ```
 
@@ -72,6 +72,7 @@ pip install -r requirements.txt
 bash ./initial_setup.sh
 
 #build docker image locally to run dbt commands
+# you may need to rebuild this each time you start a new cloud shell terminal
 docker build -t dbt_docker .
 
 # change directory to root of dbt_bigquery_example
@@ -95,8 +96,49 @@ airflow test dbt_dag docker_command 2020-01-01
 # airflow webserver and airflow scheduler has to be launched from separate terminals if running locally in cloud shell
 airflow webserver -p 8080
 
-# open another terminal
+# run the scheduler to automate all dags
 airflow scheduler
+```
+
+## How to MANUALLY run a basic end to end pipeline?
+
+Pre-requisites:
+
+- all the above steps
+- replace the DockerOperator volume paths similar to the above dbt_operations.py step
+
+What does the pipeline exactly do?
+
+- load local seed files into bigquery tables: `dbt seed --show`
+- tests if dbt connnection configurations are working: `dbt debug`
+- how fresh is the data?: `dbt source snapshot-freshness`
+- perform transformations: `dbt run`
+- test transformation outputs: `dbt test`
+- prints a success message: `echo "SUCCESSFUL PIPELINE"`
+
+```bash
+
+# ensure your airflow home path is set
+export AIRFLOW_HOME="$(pwd)"
+
+# list out the dag steps in the simple pipeline
+airflow list_tasks dbt_pipeline --tree
+
+# example output
+# <Task(DockerOperator): dbt_debug>
+#     <Task(DockerOperator): dbt_seed>
+#         <Task(DockerOperator): dbt_source_freshness>
+#             <Task(DockerOperator): dbt_run>
+#                 <Task(DockerOperator): dbt_test>
+#                     <Task(BashOperator): success_message>
+
+# run the pipeline manually
+airflow backfill dbt_pipeline -s 2020-01-01 -e 2020-01-02
+
+# run the below to view the pipeline in the airflow UI
+# note: cloudshell as it is doesn't like manually triggering from the UI(likely network configs)
+airflow webserver -p 8080
+
 ```
 
 ## Notes
