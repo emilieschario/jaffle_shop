@@ -72,6 +72,7 @@ pip install -r requirements.txt
 bash ./initial_setup.sh
 
 #build docker image locally to run dbt commands
+# you may need to rebuild this each time you start a new cloud shell terminal
 docker build -t dbt_docker .
 
 # change directory to root of dbt_bigquery_example
@@ -124,15 +125,15 @@ export AIRFLOW_HOME="$(pwd)"
 airflow list_tasks dbt_pipeline --tree
 
 # example output
-# <Task(DockerOperator): dbt_seed>
-#     <Task(DockerOperator): dbt_debug>
+# <Task(DockerOperator): dbt_debug>
+#     <Task(DockerOperator): dbt_seed>
 #         <Task(DockerOperator): dbt_source_freshness>
 #             <Task(DockerOperator): dbt_run>
 #                 <Task(DockerOperator): dbt_test>
 #                     <Task(BashOperator): success_message>
 
 # run the pipeline manually
-airflow backfill dbt_pipeline -s 2015-06-01 -e 2015-06-07
+airflow backfill -s 2020-01-01 dbt_pipeline
 
 ```
 
