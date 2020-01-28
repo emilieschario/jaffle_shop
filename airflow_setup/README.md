@@ -18,7 +18,7 @@
 # clone repo
 git clone https://github.com/sungchun12/dbt_bigquery_example.git
 
-# change to  your airflow working directory
+# change to your airflow working directory
 cd dbt_bigquery_example/airflow_setup/
 ```
 
@@ -105,6 +105,7 @@ airflow scheduler
 Pre-requisites:
 
 - all the above steps
+- replace the DockerOperator volume paths similar to the above dbt_operations.py step
 
 What does the pipeline exactly do?
 
