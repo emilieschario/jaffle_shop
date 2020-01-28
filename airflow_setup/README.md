@@ -105,7 +105,7 @@ airflow scheduler
 Pre-requisites:
 
 - all the above steps
-- replace the DockerOperator volume paths similar to the above dbt_operations.py step
+- replace the DockerOperator volume paths similar to the above dbt_operations.py step within [dbt_simple_pipeline.py](/airflow_setup/dags/dbt_simple_pipeline.py)
 
 What does the pipeline exactly do?
 
