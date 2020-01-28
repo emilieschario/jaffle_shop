@@ -99,6 +99,50 @@ airflow webserver -p 8080
 airflow scheduler
 ```
 
+## How to MANUALLY run a basic end to end pipeline?
+
+Pre-requisites:
+
+- create a bucket to land raw files
+- create an empty dataset
+
+What does the pipeline exactly do?
+
+- load local seed files into bigquery tables: `dbt seed --show`
+- tests if dbt connnection configurations are working: `dbt debug`
+- how fresh is the data?: `dbt source snapshot-freshness`
+- perform transformations: `dbt run`
+- test transformation outputs: `dbt test`
+- prints a success message: `echo "SUCCESSFUL PIPELINE"`
+
+```bash
+
+# ensure your airflow home path is set
+export AIRFLOW_HOME="$(pwd)"
+
+# list out the dag steps in the simple pipeline
+airflow list_tasks dbt_pipeline --tree
+
+# example output
+# <Task(DockerOperator): dbt_seed>
+#     <Task(DockerOperator): dbt_debug>
+#         <Task(DockerOperator): dbt_source_freshness>
+#             <Task(DockerOperator): dbt_run>
+#                 <Task(DockerOperator): dbt_test>
+#                     <Task(BashOperator): success_message>
+
+# run the pipeline manually
+airflow backfill dbt_pipeline -s 2015-06-01 -e 2015-06-07
+
+```
+
+Description:• gcs to bigquery
+• dbt debug
+• dbt test source
+• dbt run:specific table
+• dbt test: specific table
+Move to file to processed bucket.
+
 ## Notes
 
 - docker operator works without including the volumes parameter
