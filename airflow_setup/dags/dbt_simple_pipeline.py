@@ -20,12 +20,13 @@ with DAG(
     schedule_interval="5 * * * *",
     catchup=False,
 ) as dag:
+
     t1 = DockerOperator(
-        task_id="dbt_seed",
+        task_id="dbt_debug",
         image="dbt_docker:latest",
         api_version="auto",
         auto_remove=True,
-        command="dbt seed --show",
+        command="dbt debug",
         docker_url="unix://var/run/docker.sock",
         network_mode="bridge",
         volumes=[
@@ -33,13 +34,12 @@ with DAG(
             "/home/realsww123/dbt_bigquery_example/profiles.yml:/root/.dbt/profiles.yml",
         ],
     )
-
     t2 = DockerOperator(
-        task_id="dbt_debug",
+        task_id="dbt_seed",
         image="dbt_docker:latest",
         api_version="auto",
         auto_remove=True,
-        command="dbt debug",
+        command="dbt seed --show",
         docker_url="unix://var/run/docker.sock",
         network_mode="bridge",
         volumes=[
