@@ -20,44 +20,10 @@ git clone https://github.com/sungchun12/dbt_bigquery_example.git
 
 # change to  your airflow working directory
 cd dbt_bigquery_example/airflow_setup/
-
-# setup python virtual environment
-sudo easy_install pip
-sudo pip install virtualenv
-virtualenv -p python3 py37_venv
-source py37_venv/bin/activate
-pip install --upgrade pip
-pip install -r requirements.txt
-
-# setup airflow environment
-bash ./initial_setup.sh
-
-#build docker image locally to run dbt commands
-docker build -t dbt_docker .
-
-# change directory to root of dbt_bigquery_example
-cd ..
-
-# run below command to test dbt commands within docker
-docker run --rm -it \
--v $PWD:/dbt \
--v <path to profiles.yml file>:/root/.dbt/profiles.yml \
-dbt_docker:latest dbt <dbt command>
-
-# example
-# docker run --rm -it \
-# -v $PWD:/dbt \
-# -v /Users/sung/Desktop/repos/dbt_bigquery_example/profiles.yml:/root/.dbt/profiles.yml \
-# dbt_docker:latest dbt test
-
-# update volumes path with YOUR specific mounted volume paths within dbt_operations.py
-
-
 ```
 
 ```python3
-
-# within dbt_operations.py file, update the below volumes paths
+# update volumes path with YOUR specific mounted volume paths within dbt_operations.py
 t2 = DockerOperator(
     task_id="docker_command",
     image="dbt_docker:latest",
@@ -94,6 +60,7 @@ t2 = DockerOperator(
 ```
 
 ```bash
+<<<<<<< HEAD
 # test the specific airflow dbt task
 airflow test dbt_dag docker_command 2020-01-01
 
@@ -105,6 +72,45 @@ airflow webserver -p 8080
 
 airflow scheduler
 
+=======
+# setup python virtual environment
+sudo easy_install pip
+sudo pip install virtualenv
+virtualenv -p python3 py37_venv
+source py37_venv/bin/activate
+pip install --upgrade pip
+pip install -r requirements.txt
+
+# setup airflow environment
+bash ./initial_setup.sh
+
+#build docker image locally to run dbt commands
+docker build -t dbt_docker .
+
+# change directory to root of dbt_bigquery_example
+cd ..
+
+# run below command to test dbt commands within docker
+docker run --rm -it \
+-v $PWD:/dbt \
+-v <path to profiles.yml file>:/root/.dbt/profiles.yml \
+dbt_docker:latest dbt <dbt command>
+
+# example
+# docker run --rm -it \
+# -v $PWD:/dbt \
+# -v /Users/sung/Desktop/repos/dbt_bigquery_example/profiles.yml:/root/.dbt/profiles.yml \
+# dbt_docker:latest dbt test
+
+# test the specific airflow dbt task-if no error messages then SUCCESS
+airflow test dbt_dag docker_command 2020-01-01
+
+# airflow webserver and airflow scheduler has to be launched from separate terminals if running locally in cloud shell
+airflow webserver -p 8080
+
+# open another terminal
+airflow scheduler
+>>>>>>> ef2d5ad1531c727eb63b7dae76fd97dc657ad4b3
 ```
 
 ## Notes
