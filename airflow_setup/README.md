@@ -60,19 +60,6 @@ t2 = DockerOperator(
 ```
 
 ```bash
-<<<<<<< HEAD
-# test the specific airflow dbt task
-airflow test dbt_dag docker_command 2020-01-01
-
-# airflow webserver and airflow scheduler has to be launched from separate terminals if running locally in cloud shell
-
-airflow webserver -p 8080
-
-# open another terminal
-
-airflow scheduler
-
-=======
 # setup python virtual environment
 sudo easy_install pip
 sudo pip install virtualenv
@@ -110,7 +97,6 @@ airflow webserver -p 8080
 
 # open another terminal
 airflow scheduler
->>>>>>> ef2d5ad1531c727eb63b7dae76fd97dc657ad4b3
 ```
 
 ## Notes
