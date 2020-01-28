@@ -15,10 +15,7 @@ default_args = {
 }
 
 with DAG(
-    "dbt_pipeline",
-    default_args=default_args,
-    schedule_interval="5 * * * *",
-    catchup=False,
+    "dbt_pipeline", default_args=default_args, schedule_interval="@once", catchup=False,
 ) as dag:
 
     t1 = DockerOperator(
