@@ -153,7 +153,7 @@ airflow webserver -p 8080
 
 ```
 
--update the image information in [dbt_simple_pipeline_gcr.py](/airflow_setup/dags/dbt_simple_pipeline_gcr.py)
+- update the image information in [dbt_simple_pipeline_gcr.py](/airflow_setup/dags/dbt_simple_pipeline_gcr.py)
 
 ```python
 # replace every image variable with the below
