@@ -62,7 +62,7 @@ def add_docker_connection(ds, **kwargs):
 
     # save contents of service account key into encrypted password field
     with open("../service_account.json", "r") as file:
-        data = file.read()
+        data = file.read().replace("\n", "")  # replace new lines
         new_conn.set_password(data)
 
     session = settings.Session()
