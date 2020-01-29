@@ -141,6 +141,55 @@ airflow webserver -p 8080
 
 ```
 
+## How to MANUALLY run a basic end to end pipeline with google container registry hosting the docker image?
+
+- Note: this is the same example as above but connecting to and running on a gcr container vs. running it on a locally built docker container
+
+- update the image information in [add_gcp_connection.py](/airflow_setup/dags/add_gcp_connection.py)
+
+```python
+# example: host="gcr.io/wam-bam-258119"
+ host=<your project id>
+
+```
+
+-update the image information in [dbt_simple_pipeline_gcr.py](/airflow_setup/dags/dbt_simple_pipeline_gcr.py)
+
+```python
+# replace every image variable with the below
+# example: image="gcr.io/wam-bam-258119/dbt_docker:latest",
+image="gcr.io/<your project id>/dbt_docker:latest"
+
+```
+
+```bash
+# configure gcloud for docker operations
+gcloud auth configure-docker
+
+# tag your docker image for gcr
+docker images
+# copy the image id of dbt_docker
+docker tag <your docker image id> gcr.io/<your project id>/dbt_docker
+
+# push docker image to your private container registry
+#example: docker push gcr.io/wam-bam-258119/dbt_docker
+docker push gcr.io/<your project id>/dbt_docker
+
+# add the docker connection to airflow
+airflow run add_gcp_connection add_docker_connection_python 2001-01-01
+
+# test a simple task to see if it works
+airflow test dbt_pipeline_gcr dbt_debug 2020-01-01
+
+# run the pipeline manually
+airflow backfill dbt_pipeline_gcr -s 2020-01-01 -e 2020-01-02
+
+# run the below to view the pipeline in the airflow UI
+# note: cloudshell as it is doesn't like manually triggering from the UI(likely network configs)
+airflow webserver -p 8080
+
+```
+
 ## Notes
 
 - docker operator works without including the volumes parameter
@@ -148,3 +197,4 @@ airflow webserver -p 8080
 - mounts denied on mac because of folder permissions
 - will have to think through how a production airflow deployment will retrieve the service account
 - [for ease of development, we can simply build the dbt docker image locally until google container registry details are figured out](https://stackoverflow.com/questions/58733579/airflow-pull-docker-image-from-private-google-container-repository)
+- [cloud sql connection](https://airflow.apache.org/docs/stable/howto/connection/gcp_sql.html)
