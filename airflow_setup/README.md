@@ -109,8 +109,8 @@ Pre-requisites:
 
 What does the pipeline exactly do?
 
-- load local seed files into bigquery tables: `dbt seed --show`
 - tests if dbt connnection configurations are working: `dbt debug`
+- load local seed files into bigquery tables: `dbt seed --show`
 - how fresh is the data?: `dbt source snapshot-freshness`
 - perform transformations: `dbt run`
 - test transformation outputs: `dbt test`
