@@ -24,9 +24,9 @@ with DAG(
     t1 = DockerOperator(
         task_id="dbt_debug",
         docker_conn_id="gcr_docker_connection",
-        image="dbt_docker:latest",
+        image="gcr.io/wam-bam-258119/dbt_docker:latest",
         api_version="auto",
-        auto_remove=True,
+        auto_remove=False,
         command="dbt debug",
         docker_url="unix://var/run/docker.sock",
         network_mode="bridge",
@@ -37,9 +37,10 @@ with DAG(
     )
     t2 = DockerOperator(
         task_id="dbt_seed",
-        image="dbt_docker:latest",
+        docker_conn_id="gcr_docker_connection",
+        image="gcr.io/wam-bam-258119/dbt_docker:latest",
         api_version="auto",
-        auto_remove=True,
+        auto_remove=False,
         command="dbt seed --show",
         docker_url="unix://var/run/docker.sock",
         network_mode="bridge",
@@ -51,9 +52,10 @@ with DAG(
 
     t3 = DockerOperator(
         task_id="dbt_source_freshness",
-        image="dbt_docker:latest",
+        docker_conn_id="gcr_docker_connection",
+        image="gcr.io/wam-bam-258119/dbt_docker:latest",
         api_version="auto",
-        auto_remove=True,
+        auto_remove=False,
         command="dbt source snapshot-freshness",
         docker_url="unix://var/run/docker.sock",
         network_mode="bridge",
@@ -65,9 +67,10 @@ with DAG(
 
     t4 = DockerOperator(
         task_id="dbt_run",
-        image="dbt_docker:latest",
+        docker_conn_id="gcr_docker_connection",
+        image="gcr.io/wam-bam-258119/dbt_docker:latest",
         api_version="auto",
-        auto_remove=True,
+        auto_remove=False,
         command="dbt run",
         docker_url="unix://var/run/docker.sock",
         network_mode="bridge",
@@ -79,9 +82,10 @@ with DAG(
 
     t5 = DockerOperator(
         task_id="dbt_test",
-        image="dbt_docker:latest",
+        docker_conn_id="gcr_docker_connection",
+        image="gcr.io/wam-bam-258119/dbt_docker:latest",
         api_version="auto",
-        auto_remove=True,
+        auto_remove=False,
         command="dbt test",
         docker_url="unix://var/run/docker.sock",
         network_mode="bridge",
