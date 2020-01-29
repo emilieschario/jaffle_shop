@@ -50,12 +50,47 @@ def add_gcp_connection(ds, **kwargs):
         print(msg)
 
 
-dag = DAG("add_gcp_connection", default_args=default_args, schedule_interval="@once")
+# https://github.com/apache/airflow/blob/master/airflow/models/connection.py
+def add_docker_connection(ds, **kwargs):
+    """"Add a airflow connection for google container registry"""
+    new_conn = Connection(
+        conn_id="gcr_docker_connection",  # TODO: parameterize
+        conn_type="docker",
+        host="gcr.io/wam-bam-258119",  # TODO: parameterize
+        login="_json_key",  # TODO: parameterize
+    )
 
-# Task to add a connection
-t1 = PythonOperator(
-    dag=dag,
-    task_id="add_gcp_connection_python",
-    python_callable=add_gcp_connection,
-    provide_context=True,
-)
+    # save contents of service account key into encrypted password field
+    with open("../service_account.json", "r") as file:
+        data = file.read()
+        new_conn.set_password(data)
+
+    session = settings.Session()
+    if not (
+        session.query(Connection).filter(Connection.conn_id == new_conn.conn_id).first()
+    ):
+        session.add(new_conn)
+        session.commit()
+    else:
+        msg = "\n\tA connection with `conn_id`={conn_id} already exists\n"
+        msg = msg.format(conn_id=new_conn.conn_id)
+        print(msg)
+
+
+with DAG(
+    "add_gcp_connection", default_args=default_args, schedule_interval="@once"
+) as dag:
+
+    # Task to add a google cloud connection
+    t1 = PythonOperator(
+        task_id="add_gcp_connection_python",
+        python_callable=add_gcp_connection,
+        provide_context=True,
+    )
+
+    # Task to add a google container registry connection
+    t2 = PythonOperator(
+        task_id="add_docker_connection_python",
+        python_callable=add_docker_connection,
+        provide_context=True,
+    )
