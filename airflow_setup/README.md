@@ -209,6 +209,7 @@ What does this NOT do?
 
 # https://cloud.google.com/vpc/docs/configure-private-services-access#allocating-range
 
+# update the environment variables below
 HOST_PROJECT="wam-bam-258119"
 ADDRESS_NAME="airflow-network" # do not choose "default"
 NETWORK_NAME="default"
