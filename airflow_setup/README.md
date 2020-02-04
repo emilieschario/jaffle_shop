@@ -212,7 +212,7 @@ What does this NOT do?
 HOST_PROJECT="wam-bam-258119"
 ADDRESS_NAME="airflow-network" # do not choose "default"
 NETWORK_NAME="default"
-INSTANCE_NAME="airflow-vm"
+COMPUTE_INSTANCE_NAME="airflow-vm"
 
 SQL_INSTANCE_NAME="airflow-demonstration" # if you run the below commands multiple times, this must change each time
 SQL_INSTANCE_TIER="db-g1-small" # "db-n1-standard-4" is not a shared core tier type, MUST use shared core type
@@ -277,7 +277,7 @@ gcloud beta sql users create $SQL_USER_NAME \
 
 # create a compute engine instance
 # note: rhel(red hat enterprise linux) is common in enterprise setups
-gcloud compute instances create $INSTANCE_NAME \
+gcloud compute instances create $COMPUTE_INSTANCE_NAME \
     --image-family rhel-8 \
     --image-project rhel-cloud \
     --network=$NETWORK_NAME \
@@ -285,10 +285,15 @@ gcloud compute instances create $INSTANCE_NAME \
 
 # test if you can connect through compute engine airflow vm
 sudo yum install postgresql
-psql -h [CLOUD_SQL_PRIVATE_IP_ADDR]  -d $SQL_DATABASE_NAME -U $SQL_USER_NAME 
+psql -h [CLOUD_SQL_PRIVATE_IP_ADDR] -d $SQL_DATABASE_NAME -U $SQL_USER_NAME 
 
 
 export AIRFLOW__CORE__SQL_ALCHEMY_CONN="postgresql://$SQL_USER_NAME:$SQL_USER_PASS@3$private_ip:5432/$SQL_DATABASE_NAME"
+
+# delete your infrastructure
+gcloud beta sql instances delete $SQL_INSTANCE_NAME
+
+gcloud compute instances delete $COMPUTE_INSTANCE_NAME
 ```
 
 ```bash
