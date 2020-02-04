@@ -190,6 +190,122 @@ airflow webserver -p 8080
 
 ```
 
+## How to setup an ad hoc airflow vm and cloud sql postgresql database backend for development?
+- This is a scrappy process to get something that mimics in basic functionality the look and feel of a manual cloud setup for airflow
+- I recommend using terraform for robustness
+- This is meant to play around with the infrastructure quickly, so focus can be spent on pipeline development
+
+What does this do?
+- sets up a cloud sql database only accessible from private IP(no public internet traffic)
+- sets up a compute engine VM to install airflow on
+- connects the compute engine VM to the cloud sql database
+
+What does this NOT do?
+- template code for a production scale implementation
+
+
+```bash
+#!/bin/bash
+
+# https://cloud.google.com/vpc/docs/configure-private-services-access#allocating-range
+
+HOST_PROJECT="wam-bam-258119"
+ADDRESS_NAME="airflow-network" # do not choose "default"
+NETWORK_NAME="default"
+INSTANCE_NAME="airflow-vm"
+
+SQL_INSTANCE_NAME="airflow-demonstration" # if you run the below commands multiple times, this must change each time
+SQL_INSTANCE_TIER="db-g1-small" # "db-n1-standard-4" is not a shared core tier type, MUST use shared core type
+SQL_INSTANCE_ZONE="us-east4-a"
+SQL_DATABASE_NAME="airflow-db-demo"
+SQL_USER_NAME="airflow"
+SQL_USER_PASS="airflow"
+
+# Enable the Services Networking API in host project
+gcloud services enable servicenetworking.googleapis.com \
+    --project=$HOST_PROJECT
+
+# Create an address allocation for CloudSQL private IP access
+gcloud compute addresses create $ADDRESS_NAME \
+    --global \
+    --purpose=VPC_PEERING \
+    --prefix-length=24 \
+    --network=$NETWORK_NAME \
+    --project=$HOST_PROJECT
+
+# check if the address was created
+gcloud compute addresses list --global --filter="purpose=VPC_PEERING"
+
+# example output
+# NAME             ADDRESS/RANGE   TYPE      PURPOSE      NETWORK  REGION  SUBNET  STATUS
+# airflow-network  10.26.211.0/24  INTERNAL  VPC_PEERING  default                  RESERVED
+
+# Create services connection or update if you messed up the first time
+# gcloud services vpc-peerings update \
+#     --service=servicenetworking.googleapis.com \
+#     --network=$NETWORK_NAME \
+#     --project=$HOST_PROJECT \
+#     --ranges=$ADDRESS_NAME \
+#     --force
+gcloud services vpc-peerings connect \
+    --service=servicenetworking.googleapis.com \
+    --network=$NETWORK_NAME \
+    --project=$HOST_PROJECT \
+    --ranges=$ADDRESS_NAME
+
+# Build a new CloudSQL instance in the host VPC
+gcloud beta sql instances create $SQL_INSTANCE_NAME \
+    --project=$HOST_PROJECT \
+    --network="projects/${HOST_PROJECT}/global/networks/${NETWORK_NAME}" \
+    --no-assign-ip \
+    --tier=$SQL_INSTANCE_TIER \
+    --database-version="POSTGRES_11" \
+    --zone=$SQL_INSTANCE_ZONE \
+    --storage-size=10
+
+# example output-is not a real private IP-DUH!
+# NAME                   DATABASE_VERSION  LOCATION    TIER         PRIMARY_ADDRESS  PRIVATE_ADDRESS  STATUS
+# airflow-demonstration  POSTGRES_11       us-east4-a  db-g1-small  -                10.20.30.3       RUNNABLE
+
+# Create a new database and user
+gcloud beta sql databases create $SQL_DATABASE_NAME \
+    --instance=$SQL_INSTANCE_NAME
+
+gcloud beta sql users create $SQL_USER_NAME \
+    --instance=$SQL_INSTANCE_NAME \
+    --password=$SQL_USER_PASS
+
+# create a compute engine instance
+# note: rhel(red hat enterprise linux) is common in enterprise setups
+gcloud compute instances create $INSTANCE_NAME \
+    --image-family rhel-8 \
+    --image-project rhel-cloud \
+    --network=$NETWORK_NAME \
+    --zone=$SQL_INSTANCE_ZONE
+
+# test if you can connect through compute engine airflow vm
+sudo yum install postgresql
+psql -h [CLOUD_SQL_PRIVATE_IP_ADDR]  -d $SQL_DATABASE_NAME -U $SQL_USER_NAME 
+
+
+export AIRFLOW__CORE__SQL_ALCHEMY_CONN="postgresql://$SQL_USER_NAME:$SQL_USER_PASS@3$private_ip:5432/$SQL_DATABASE_NAME"
+```
+
+```bash
+
+instance_name=airflow
+
+db_type=postgresql
+
+username=airflow
+
+password=airflow
+
+db_name=airflow_sung
+
+# export AIRFLOW__CORE__SQL_ALCHEMY_CONN="postgresql://${google_sql_user.airflow.name}:${random_password.db_pass.result}@${google_sql_database_instance.airflowdb-instance.private_ip_address}:5432/${google_sql_database.airflowdb.name}"
+```
+
 ## Notes
 
 - docker operator works without including the volumes parameter
