@@ -20,6 +20,7 @@ with DAG(
     t1 = BashOperator(task_id="print_current_date", bash_command="date")
 
     t2 = DockerOperator(
+        task_id="docker_command",
         docker_conn_id="gcr_docker_connection",
         image="gcr.io/wam-bam-258119/dbt_docker:latest",
         api_version="auto",
