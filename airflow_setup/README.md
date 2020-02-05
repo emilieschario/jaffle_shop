@@ -305,49 +305,28 @@ sudo yum install git
 git clone https://github.com/sungchun12/dbt_bigquery_example.git
 
 # set environment variable for database connection
-export AIRFLOW__CORE__SQL_ALCHEMY_CONN="postgresql://$SQL_USER_NAME:$SQL_USER_PASS@3$private_ip:5432/$SQL_DATABASE_NAME"
+export AIRFLOW__CORE__SQL_ALCHEMY_CONN="postgresql://$SQL_USER_NAME:$SQL_USER_PASS@10.18.16.5:5432/$SQL_DATABASE_NAME"
 
-# https://developers.redhat.com/blog/2018/08/13/install-python3-rhel/
-# https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html-single/considerations_in_adopting_rhel_8/index
-# specific to rhel
-# for some reason, rhel does not like working with virtual environemnts compared to other linux distros
-# sudo yum -y install gcc gcc-c++
-# sudo dnf update annobin -y
-# sudo yum -y install rh-python36
-# sudo yum install -y python3-devel.x86_64
-# sudo pip3 install -r requirements.txt
-# sudo useradd airflow-user
-# sudo passwd airflow-user
-# <enter a password>
-# sudo usermod -aG wheel airflow-user
-# su airflow-user -
-# <enter a password>
-# scl enable rh-python36 bash
-# sudo subscription-manager repos --enable rhel-7-server-optional-rpms \
-#   --enable rhel-server-rhscl-7-rpms
-# sudo yum install gcc
-# sudo yum install gcc-c++
-# sudo yum install libev-devel
-# sudo yum -y install @development #ensures you have gcc
-
-# sudo yum install platform-python-devel platform-python-pip platform-python-setuptools python3-pip-wheel
-
-sudo yum install gcc
+sudo yum install platform-python-devel platform-python-pip platform-python-setuptools python3-pip-wheel gcc gcc-c++
 python3 -m venv py36-venv
 source py36-venv/bin/activate
-sudo python3 -m pip install -r requirements.txt
-
-
+sudo python3 -m pip install -r requirements.txt # this take a couple minutes to install
 
 # setup airflow environment
-sudo bash ./initial_setup.sh
-
-
-# change executor to LocalExecutor in airflow.cfg file using bash
-sed -i 's/executor = SequentialExecutor/executor = LocalExecutor/' /home/realsww123/dbt_bigquery_example/airflow_setup/airflow.cfg
+export AIRFLOW_HOME="$(pwd)"
 
 # reinitialize the database
 airflow initdb
+
+airflow list_dags
+
+airflow run add_gcp_connection add_gcp_connection_python 2001-01-01
+
+airflow run add_gcp_connection add_docker_connection_python 2001-01-01
+
+# change executor to LocalExecutor in airflow.cfg file using bash
+sed -i 's/executor = SequentialExecutor/executor = LocalExecutor/' /home/schung/dbt_bigquery_example/airflow_setup/airflow.cfg
+
 
 # run an example DAG with parallel tasks to test if things are working correctly
 airflow backfill dbt_pipeline_gcr -s 2020-01-01 -e 2020-01-02
