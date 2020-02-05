@@ -27,10 +27,10 @@ with DAG(
         command="dbt debug",
         docker_url="unix://var/run/docker.sock",
         network_mode="bridge",
-        # volumes=[
-        #     "/home/airflow/dbt_files:/dbt",
-        #     "/home/airflow/dbt_files/profiles.yml:/root/.dbt/profiles.yml",
-        # ],
+        volumes=[
+            "/home/schung/dbt_bigquery_example/:/dbt",
+            "/home/schung/dbt_bigquery_example/profiles.yml:/root/.dbt/profiles.yml",
+        ],
     )
 
     t3 = BashOperator(task_id="print_hello", bash_command='echo "hello world"')
