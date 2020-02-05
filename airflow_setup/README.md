@@ -285,6 +285,14 @@ gcloud compute instances create $COMPUTE_INSTANCE_NAME \
     --network=$NETWORK_NAME \
     --zone=$SQL_INSTANCE_ZONE
 
+# enable a firewall to see the airflow web interface
+gcloud compute firewall-rules create airflow-rule \
+    --allow=tcp:8080,udp:8080 \
+    --network=$NETWORK_NAME \
+    --direction=INGRESS \
+    --enable-logging 
+
+
 # ssh into the VM
 gcloud compute ssh --project $HOST_PROJECT --zone $SQL_INSTANCE_ZONE $COMPUTE_INSTANCE_NAME
 
@@ -307,7 +315,7 @@ git clone https://github.com/sungchun12/dbt_bigquery_example.git
 # set environment variable for database connection
 export AIRFLOW__CORE__SQL_ALCHEMY_CONN="postgresql://$SQL_USER_NAME:$SQL_USER_PASS@10.18.16.5:5432/$SQL_DATABASE_NAME"
 
-sudo yum install platform-python-devel platform-python-pip platform-python-setuptools python3-pip-wheel gcc gcc-c++
+sudo yum install platform-python-devel platform-python-pip platform-python-setuptools python3-pip-wheel gcc gcc-c++ docker
 python3 -m venv py36-venv
 source py36-venv/bin/activate
 sudo python3 -m pip install -r requirements.txt # this take a couple minutes to install
@@ -318,15 +326,22 @@ export AIRFLOW_HOME="$(pwd)"
 # reinitialize the database
 airflow initdb
 
+# change executor to LocalExecutor in airflow.cfg file using bash
+sed -i 's/executor = SequentialExecutor/executor = LocalExecutor/' /home/realsww123/dbt_bigquery_example/airflow_setup/airflow.cfg
+
+# reinitialize the database
+airflow initdb
+
 airflow list_dags
 
 airflow run add_gcp_connection add_gcp_connection_python 2001-01-01
 
 airflow run add_gcp_connection add_docker_connection_python 2001-01-01
 
-# change executor to LocalExecutor in airflow.cfg file using bash
-sed -i 's/executor = SequentialExecutor/executor = LocalExecutor/' /home/schung/dbt_bigquery_example/airflow_setup/airflow.cfg
+#configure docker
+gcloud auth configure-docker
 
+docker build -t dbt_docker .
 
 # run an example DAG with parallel tasks to test if things are working correctly
 airflow backfill dbt_pipeline_gcr -s 2020-01-01 -e 2020-01-02
