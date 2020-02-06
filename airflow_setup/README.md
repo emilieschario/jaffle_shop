@@ -191,18 +191,20 @@ airflow webserver -p 8080
 ```
 
 ## How to setup an ad hoc airflow vm and cloud sql postgresql database backend for development?
+
 - This is a scrappy process to get something that mimics in basic functionality the look and feel of a manual cloud setup for airflow
 - I recommend using terraform for robustness
 - This is meant to play around with the infrastructure quickly, so focus can be spent on pipeline development
 
 What does this do?
+
 - sets up a cloud sql database only accessible from private IP(no public internet traffic)
 - sets up a compute engine VM to install airflow on
 - connects the compute engine VM to the cloud sql database
 
 What does this NOT do?
-- template code for a production scale implementation
 
+- template code for a production scale implementation
 
 ```bash
 #!/bin/bash
@@ -286,11 +288,11 @@ gcloud compute instances create $COMPUTE_INSTANCE_NAME \
     --zone=$SQL_INSTANCE_ZONE
 
 # enable a firewall to see the airflow web interface
-gcloud compute firewall-rules create airflow-rule \
+gcloud compute firewall-rules create airflow-rule-2 \
     --allow=tcp:8080,udp:8080 \
     --network=$NETWORK_NAME \
     --direction=INGRESS \
-    --enable-logging 
+    --enable-logging
 
 
 # ssh into the VM
@@ -300,14 +302,14 @@ gcloud compute ssh --project $HOST_PROJECT --zone $SQL_INSTANCE_ZONE $COMPUTE_IN
 
 # test if you can connect through compute engine airflow vm
 sudo yum install postgresql
-# example: psql -h 10.18.16.5 -d $SQL_DATABASE_NAME -U $SQL_USER_NAME 
-psql -h [CLOUD_SQL_PRIVATE_IP_ADDR] -d $SQL_DATABASE_NAME -U $SQL_USER_NAME 
+# example: psql -h 10.18.16.5 -d $SQL_DATABASE_NAME -U $SQL_USER_NAME
+psql -h [CLOUD_SQL_PRIVATE_IP_ADDR] -d $SQL_DATABASE_NAME -U $SQL_USER_NAME
 
 # exit out with below
 ctrl+z
 
 # install git
-sudo yum install git 
+sudo yum install git
 
 # clone the repo
 git clone https://github.com/sungchun12/dbt_bigquery_example.git
@@ -327,7 +329,7 @@ export AIRFLOW_HOME="$(pwd)"
 airflow initdb
 
 # change executor to LocalExecutor in airflow.cfg file using bash
-sed -i 's/executor = SequentialExecutor/executor = LocalExecutor/' /home/realsww123/dbt_bigquery_example/airflow_setup/airflow.cfg
+sed -i 's/executor = SequentialExecutor/executor = LocalExecutor/' /home/sung/dbt_bigquery_example/airflow_setup/airflow.cfg
 
 # reinitialize the database
 airflow initdb
@@ -343,8 +345,16 @@ gcloud auth configure-docker
 
 docker build -t dbt_docker .
 
+# update the volume paths in the server files-use git pull after updating in your local environment
+
 # run an example DAG with parallel tasks to test if things are working correctly
 airflow backfill dbt_pipeline_gcr -s 2020-01-01 -e 2020-01-02
+
+# start the airflow server
+# Note, instead of clicking on http://0.0.0.0:8080, replace 0.0.0.0 with the external IP of the VM
+
+#example
+http://35.245.81.119:8080
 
 # delete your infrastructure
 gcloud beta sql instances delete $SQL_INSTANCE_NAME
@@ -352,20 +362,9 @@ gcloud beta sql instances delete $SQL_INSTANCE_NAME
 gcloud compute instances delete $COMPUTE_INSTANCE_NAME
 
 
-
 ```
 
 ```bash
-
-instance_name=airflow
-
-db_type=postgresql
-
-username=airflow
-
-password=airflow
-
-db_name=airflow_sung
 
 # export AIRFLOW__CORE__SQL_ALCHEMY_CONN="postgresql://${google_sql_user.airflow.name}:${random_password.db_pass.result}@${google_sql_database_instance.airflowdb-instance.private_ip_address}:5432/${google_sql_database.airflowdb.name}"
 ```
