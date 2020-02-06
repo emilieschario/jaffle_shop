@@ -319,6 +319,7 @@ sudo yum install git
 git clone https://github.com/sungchun12/dbt_bigquery_example.git
 
 # set environment variable for database connection
+# export AIRFLOW__CORE__SQL_ALCHEMY_CONN="postgresql://${google_sql_user.airflow.name}:${random_password.db_pass.result}@${google_sql_database_instance.airflowdb-instance.private_ip_address}:5432/${google_sql_database.airflowdb.name}"
 export AIRFLOW__CORE__SQL_ALCHEMY_CONN="postgresql://$SQL_USER_NAME:$SQL_USER_PASS@10.18.16.5:5432/$SQL_DATABASE_NAME"
 
 sudo yum install platform-python-devel platform-python-pip platform-python-setuptools python3-pip-wheel gcc gcc-c++ docker
@@ -366,11 +367,6 @@ gcloud beta sql instances delete $SQL_INSTANCE_NAME
 gcloud compute instances delete $COMPUTE_INSTANCE_NAME
 
 
-```
-
-```bash
-
-# export AIRFLOW__CORE__SQL_ALCHEMY_CONN="postgresql://${google_sql_user.airflow.name}:${random_password.db_pass.result}@${google_sql_database_instance.airflowdb-instance.private_ip_address}:5432/${google_sql_database.airflowdb.name}"
 ```
 
 ## Notes
