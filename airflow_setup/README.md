@@ -288,11 +288,15 @@ gcloud compute instances create $COMPUTE_INSTANCE_NAME \
     --zone=$SQL_INSTANCE_ZONE
 
 # enable a firewall to see the airflow web interface
-gcloud compute firewall-rules create airflow-rule-2 \
+# ANYONE can view your webserver based on this rule so be careful
+# this is just a quick demo to get familiar with airflow infrastructure in GCP
+# not something you copy and paste for production
+gcloud compute firewall-rules create airflow-rule \
     --allow=tcp:8080,udp:8080 \
     --network=$NETWORK_NAME \
     --direction=INGRESS \
-    --enable-logging
+    --enable-logging \
+    --description="View the airflow webserver UI"
 
 
 # ssh into the VM
