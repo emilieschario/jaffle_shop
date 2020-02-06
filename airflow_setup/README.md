@@ -354,7 +354,7 @@ airflow backfill dbt_pipeline_gcr -s 2020-01-01 -e 2020-01-02
 # Note, instead of clicking on http://0.0.0.0:8080, replace 0.0.0.0 with the external IP of the VM
 
 #example
-http://35.245.81.119:8080
+http://35.245.81.118:8080/admin/
 
 # delete your infrastructure
 gcloud beta sql instances delete $SQL_INSTANCE_NAME
