@@ -15,6 +15,7 @@
 
 ```bash
 # setup a service account with "Logging/Logs Configuration Writer" permissions
+cd export_logs
 # example environment variables below
 PROJECT_ID="wam-bam-258119"
 SERVICE_ACCOUNT_NAME="bigquery-logs-writer"
@@ -48,6 +49,10 @@ gcloud projects add-iam-policy-binding $PROJECT_ID \
 --member serviceAccount:$SERVICE_ACCOUNT_EMAIL \
 --role roles/logging.configWriter
 
+gcloud projects add-iam-policy-binding $PROJECT_ID \
+--member serviceAccount:$SERVICE_ACCOUNT_EMAIL \
+--role roles/bigquery.admin
+
 echo "***********************"
 echo "Download the private service account key locally into export_logs folder"
 echo "***********************"
@@ -61,4 +66,15 @@ gcloud iam service-accounts keys create bigquery-logs-writer-key.json \
 # setup the bigquery dataset and create the logging table
 # then create the sink into that table with a specific filter
 # print that the sink is created in project, dataset, table
+# resource.type="audited_resource"
+# timestamp>="2020-03-05T17:37:54.386Z"
+# resource.type="bigquery_dataset" resource.labels.dataset_id="dbt_bq_example"
+
+python3 bigquery_logging_utility.py -s dbt_logs -p wam-bam-258119 -d bigquery_logs_dataset -l US -o create
+
+python3 bigquery_logging_utility.py -s dbt_logs -p wam-bam-258119 -d bigquery_logs_dataset -l US -o list
+
+python3 bigquery_logging_utility.py -s dbt_logs -p wam-bam-258119 -d bigquery_logs_dataset -l US -o update
+
+python3 bigquery_logging_utility.py -s dbt_logs -p wam-bam-258119 -d bigquery_logs_dataset -l US -o delete
 ```
