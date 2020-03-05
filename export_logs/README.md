@@ -17,7 +17,7 @@
 # setup a service account with "Logging/Logs Configuration Writer" permissions
 # example environment variables below
 PROJECT_ID="wam-bam-258119"
-SERVICE_ACCOUNT_NAME="bigquery_logs_writer"
+SERVICE_ACCOUNT_NAME="bigquery-logs-writer"
 
 echo "***********************"
 echo "Create a service account"
@@ -47,6 +47,14 @@ echo "***********************"
 gcloud projects add-iam-policy-binding $PROJECT_ID \
 --member serviceAccount:$SERVICE_ACCOUNT_EMAIL \
 --role roles/logging.configWriter
+
+echo "***********************"
+echo "Download the private service account key locally into export_logs folder"
+echo "***********************"
+gcloud iam service-accounts keys create bigquery-logs-writer-key.json \
+--iam-account=$SERVICE_ACCOUNT_EMAIL \
+--key-file-type="json"
+
 
 # run the python script
 # add flags that point to the project

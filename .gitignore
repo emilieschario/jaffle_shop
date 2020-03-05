@@ -7,3 +7,4 @@ logs/
 #ignore virtual env
 py37_venv
 **/service_account.json
+**/bigquery-logs-writer-key.json
