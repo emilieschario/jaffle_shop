@@ -77,4 +77,16 @@ python3 bigquery_logging_utility.py -s dbt_logs -p wam-bam-258119 -d bigquery_lo
 python3 bigquery_logging_utility.py -s dbt_logs -p wam-bam-258119 -d bigquery_logs_dataset -l US -o update
 
 python3 bigquery_logging_utility.py -s dbt_logs -p wam-bam-258119 -d bigquery_logs_dataset -l US -o delete
+
+# add roles to the generated log writer service account created by the python code
+# ex: p903473854152-104564@gcp-sa-logging.iam.gserviceaccount.com
+#TODO: get this email automatically based on the latest one created similar to the earlier bash command
+export LOG_EXPORT_SERVICE_ACCOUNT_EMAIL="p903473854152-104564@gcp-sa-logging.iam.gserviceaccount.com"
+gcloud projects add-iam-policy-binding $PROJECT_ID \
+--member serviceAccount:$LOG_EXPORT_SERVICE_ACCOUNT_EMAIL \
+--role roles/bigquery.dataEditor
+
+gcloud projects add-iam-policy-binding $PROJECT_ID \
+--member serviceAccount:$SERVICE_ACCOUNT_EMAIL \
+--role roles/logging.logWriter
 ```
