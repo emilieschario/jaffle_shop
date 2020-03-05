@@ -23,7 +23,9 @@ class export_logs_utility:
         self.dataset = self.bigquery_client.dataset(self.dataset_name)
         self.dataset_location = dataset_location
         self.operation = operation
-        self.filter_ = f"resource.type={'bigquery_dataset'} AND resource.labels.dataset_id={self.dataset_name}"
+        # https://cloud.google.com/bigquery/docs/reference/auditlogs#auditdata_examples
+        # TODO: update for query runs AND dbt jobs
+        self.filter_ = r'resource.type="bigquery_dataset" resource.labels.dataset_id="dbt_bq_example"'
 
     def operation_sink(self):
         """Main handler that generates or creates sink end to end
@@ -92,7 +94,7 @@ class export_logs_utility:
             print("Sink {} already exists.".format(sink.name))
             return
 
-        sink.create()
+        sink.create(unique_writer_identity=True)
         print("Created sink {}".format(sink.name))
 
     def update_sink(self):
