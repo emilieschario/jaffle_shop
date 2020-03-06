@@ -167,7 +167,7 @@ if __name__ == "__main__":
         action="store",
         type="string",
         dest="operation",
-        help="Whether to create or delete the sink",
+        help="Whether to create, delete, list, or update the sink",
     )
 
     (options, args) = parser.parse_args()
