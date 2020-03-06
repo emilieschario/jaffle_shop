@@ -38,6 +38,7 @@ class export_logs_utility:
         elif self.operation == "update":
             self.update_sink()
         elif self.operation == "delete":
+            # do NOT delete dataset and tables in case they need to remain for audit purposes
             self.delete_sink()
 
     def list_sinks(self):
