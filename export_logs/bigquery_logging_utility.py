@@ -98,6 +98,7 @@ class export_logs_utility:
         sink.create(unique_writer_identity=True)
         print("Created sink {}".format(sink.name))
 
+    # TODO: update sink functionality
     def update_sink(self):
         """Changes a sink's filter.
 
