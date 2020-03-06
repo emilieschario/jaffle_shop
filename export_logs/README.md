@@ -31,7 +31,7 @@ echo "***********************"
 echo "Create a service account"
 echo "***********************"
 gcloud iam service-accounts create $SERVICE_ACCOUNT_NAME \
---description "service account used to launch terraform locally" \
+--description "service account used to deploy export log functionality" \
 --display-name $SERVICE_ACCOUNT_NAME
 
 echo "***********************"
@@ -67,10 +67,7 @@ gcloud iam service-accounts keys create bigquery-logs-writer-key.json \
 # add flags that point to the project
 # setup the bigquery dataset and create the logging table
 # then create the sink into that table with a specific filter
-# print that the sink is created in project, dataset, table
-# resource.type="audited_resource"
-# timestamp>="2020-03-05T17:37:54.386Z"
-# resource.type="bigquery_dataset" resource.labels.dataset_id="dbt_bq_example"
+# print that the sink is created in project and dataset
 
 #explains each variable
 python3 bigquery_logging_utility.py --help
