@@ -14,8 +14,15 @@
 [documentation](https://cloud.google.com/logging/docs/api/tasks/exporting-logs)
 
 ```bash
+# create a virtual environment if not done already
+python3 -m venv py37_venv
+source py37_venv/bin/activate
+pip install --upgrade pip
+pip install -r requirements.txt
+
 # setup a service account with "Logging/Logs Configuration Writer" permissions
 cd export_logs
+
 # example environment variables below
 PROJECT_ID="wam-bam-258119"
 SERVICE_ACCOUNT_NAME="bigquery-logs-writer"
@@ -26,11 +33,6 @@ echo "***********************"
 gcloud iam service-accounts create $SERVICE_ACCOUNT_NAME \
 --description "service account used to launch terraform locally" \
 --display-name $SERVICE_ACCOUNT_NAME
-
-echo "***********************"
-echo "Wait for the service account to be created"
-echo "***********************"
-sleep 10s
 
 echo "***********************"
 echo "List service account to verify creation and capture email"
@@ -70,6 +72,9 @@ gcloud iam service-accounts keys create bigquery-logs-writer-key.json \
 # timestamp>="2020-03-05T17:37:54.386Z"
 # resource.type="bigquery_dataset" resource.labels.dataset_id="dbt_bq_example"
 
+#explains each variable
+python3 bigquery_logging_utility.py --help
+
 python3 bigquery_logging_utility.py -s bigquery_audit_logs -p wam-bam-258119 -d bigquery_logs_dataset -l US -o create
 
 python3 bigquery_logging_utility.py -s bigquery_audit_logs -p wam-bam-258119 -d bigquery_logs_dataset -l US -o list
@@ -78,10 +83,10 @@ python3 bigquery_logging_utility.py -s bigquery_audit_logs -p wam-bam-258119 -d 
 
 python3 bigquery_logging_utility.py -s bigquery_audit_logs -p wam-bam-258119 -d bigquery_logs_dataset -l US -o delete
 
-# add roles to the generated log writer service account created by the python code
+# add roles to the generated log writer service account created automatically
 # ex: p903473854152-104564@gcp-sa-logging.iam.gserviceaccount.com
-#TODO: get this email automatically based on the latest one created similar to the earlier bash command
-export LOG_EXPORT_SERVICE_ACCOUNT_EMAIL="p903473854152-117003@gcp-sa-logging.iam.gserviceaccount.com"
+LOG_EXPORT_SERVICE_ACCOUNT_EMAIL=$(gcloud beta logging sinks describe bigquery_audit_logs | grep "serviceAccount:" | head -n 1 | awk '{print $2}' | cut -d':' -f2)
+
 gcloud projects add-iam-policy-binding $PROJECT_ID \
 --member serviceAccount:$LOG_EXPORT_SERVICE_ACCOUNT_EMAIL \
 --role roles/bigquery.dataEditor
@@ -90,6 +95,8 @@ gcloud projects add-iam-policy-binding $PROJECT_ID \
 --member serviceAccount:$LOG_EXPORT_SERVICE_ACCOUNT_EMAIL \
 --role roles/logging.logWriter
 ```
+
+> Note: After you perform some query actions in your respective BigQuery project, you can run the below example queries
 
 ```sql
   -- standardSQL
