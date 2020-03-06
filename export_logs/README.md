@@ -70,23 +70,53 @@ gcloud iam service-accounts keys create bigquery-logs-writer-key.json \
 # timestamp>="2020-03-05T17:37:54.386Z"
 # resource.type="bigquery_dataset" resource.labels.dataset_id="dbt_bq_example"
 
-python3 bigquery_logging_utility.py -s dbt_logs -p wam-bam-258119 -d bigquery_logs_dataset -l US -o create
+python3 bigquery_logging_utility.py -s bigquery_audit_logs -p wam-bam-258119 -d bigquery_logs_dataset -l US -o create
 
-python3 bigquery_logging_utility.py -s dbt_logs -p wam-bam-258119 -d bigquery_logs_dataset -l US -o list
+python3 bigquery_logging_utility.py -s bigquery_audit_logs -p wam-bam-258119 -d bigquery_logs_dataset -l US -o list
 
-python3 bigquery_logging_utility.py -s dbt_logs -p wam-bam-258119 -d bigquery_logs_dataset -l US -o update
+python3 bigquery_logging_utility.py -s bigquery_audit_logs -p wam-bam-258119 -d bigquery_logs_dataset -l US -o update
 
-python3 bigquery_logging_utility.py -s dbt_logs -p wam-bam-258119 -d bigquery_logs_dataset -l US -o delete
+python3 bigquery_logging_utility.py -s bigquery_audit_logs -p wam-bam-258119 -d bigquery_logs_dataset -l US -o delete
 
 # add roles to the generated log writer service account created by the python code
 # ex: p903473854152-104564@gcp-sa-logging.iam.gserviceaccount.com
 #TODO: get this email automatically based on the latest one created similar to the earlier bash command
-export LOG_EXPORT_SERVICE_ACCOUNT_EMAIL="p903473854152-104564@gcp-sa-logging.iam.gserviceaccount.com"
+export LOG_EXPORT_SERVICE_ACCOUNT_EMAIL="p903473854152-117003@gcp-sa-logging.iam.gserviceaccount.com"
 gcloud projects add-iam-policy-binding $PROJECT_ID \
 --member serviceAccount:$LOG_EXPORT_SERVICE_ACCOUNT_EMAIL \
 --role roles/bigquery.dataEditor
 
 gcloud projects add-iam-policy-binding $PROJECT_ID \
---member serviceAccount:$SERVICE_ACCOUNT_EMAIL \
+--member serviceAccount:$LOG_EXPORT_SERVICE_ACCOUNT_EMAIL \
 --role roles/logging.logWriter
+```
+
+```sql
+  -- standardSQL
+  -- What are the most popular datasets only?
+  SELECT
+    REGEXP_EXTRACT(protopayload_auditlog.resourceName, '^projects/[^/]+/datasets/([^/]+)/tables') AS datasetRef,
+    COUNT(DISTINCT REGEXP_EXTRACT(protopayload_auditlog.resourceName, '^projects/[^/]+/datasets/[^/]+/tables/(.*)$')) AS active_tables,
+    COUNTIF(JSON_EXTRACT(protopayload_auditlog.metadataJson, "$.tableDataRead") IS NOT NULL) AS dataReadEvents,
+    COUNTIF(JSON_EXTRACT(protopayload_auditlog.metadataJson, "$.tableDataChange") IS NOT NULL) AS dataChangeEvents
+  FROM `MYPROJECTID.MYDATASETID.cloudaudit_googleapis_com_data_access_2019*`
+  WHERE
+    JSON_EXTRACT(protopayload_auditlog.metadataJson, "$.tableDataRead") IS NOT NULL
+    OR JSON_EXTRACT(protopayload_auditlog.metadataJson, "$.tableDataChange") IS NOT NULL
+  GROUP BY datasetRef
+  ORDER BY datasetRef
+
+  -- What are the most popular datasets and tables?
+  SELECT
+    REGEXP_EXTRACT(protopayload_auditlog.resourceName, '^projects/[^/]+/datasets/([^/]+)/tables') AS datasetRef,
+    REGEXP_EXTRACT(protopayload_auditlog.resourceName, '^projects/[^/]+/datasets/[^/]+/tables/(.*)$') AS active_table_names,
+    COUNT(DISTINCT REGEXP_EXTRACT(protopayload_auditlog.resourceName, '^projects/[^/]+/datasets/[^/]+/tables/(.*)$')) AS active_tables,
+    COUNTIF(JSON_EXTRACT(protopayload_auditlog.metadataJson, "$.tableDataRead") IS NOT NULL) AS dataReadEvents,
+    COUNTIF(JSON_EXTRACT(protopayload_auditlog.metadataJson, "$.tableDataChange") IS NOT NULL) AS dataChangeEvents
+  FROM `wam-bam-258119.bigquery_logs_dataset.cloudaudit_googleapis_com_data_access_20200306`
+  WHERE
+    JSON_EXTRACT(protopayload_auditlog.metadataJson, "$.tableDataRead") IS NOT NULL
+    OR JSON_EXTRACT(protopayload_auditlog.metadataJson, "$.tableDataChange") IS NOT NULL
+  GROUP BY datasetRef, active_table_names
+  ORDER BY datasetRef, dataReadEvents desc
 ```
