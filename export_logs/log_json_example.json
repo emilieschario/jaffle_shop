@@ -1,0 +1,36 @@
+{
+  "@type": "type.googleapis.com/google.cloud.audit.BigQueryAuditMetadata",
+  "jobChange": {
+    "after": "DONE",
+    "job": {
+      "jobConfig": {
+        "queryConfig": {
+          "createDisposition": "CREATE_IF_NEEDED",
+          "destinationTable": "projects/wam-bam-258119/datasets/_ea600ddd6980383a4e045b382918a46ea962c9a5/tables/anon6d52952dd01b7857423b0e9c233237fa5871f645",
+          "priority": "QUERY_INTERACTIVE",
+          "query": "SELECT * FROM `wam-bam-258119.dbt_bq_example.customer_orders` LIMIT 1000",
+          "statementType": "SELECT",
+          "writeDisposition": "WRITE_TRUNCATE"
+        },
+        "type": "QUERY"
+      },
+      "jobName": "projects/wam-bam-258119/jobs/bquxjob_5fb87cba_170b0f5155e",
+      "jobStats": {
+        "createTime": "2020-03-06T17:46:58.914Z",
+        "endTime": "2020-03-06T17:46:59.201Z",
+        "queryStats": {
+          "billingTier": 1,
+          "outputRowCount": "62",
+          "referencedTables": [
+            "projects/wam-bam-258119/datasets/dbt_bq_example/tables/customer_orders"
+          ],
+          "totalBilledBytes": "10485760",
+          "totalProcessedBytes": "1984"
+        },
+        "startTime": "2020-03-06T17:46:59.048Z",
+        "totalSlotMs": "35"
+      },
+      "jobStatus": { "jobState": "DONE" }
+    }
+  }
+}
