@@ -25,7 +25,7 @@ class export_logs_utility:
         self.operation = operation
         # https://cloud.google.com/bigquery/docs/reference/auditlogs#auditdata_examples
         # TODO: update for query runs AND dbt jobs
-        self.filter_ = r'resource.type="bigquery_dataset" resource.labels.dataset_id="dbt_bq_example"'
+        self.filter_ = r'protoPayload.metadata."@type"="type.googleapis.com/google.cloud.audit.BigQueryAuditMetadata"'
 
     def operation_sink(self):
         """Main handler that generates or creates sink end to end
