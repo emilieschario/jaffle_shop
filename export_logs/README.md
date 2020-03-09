@@ -72,13 +72,37 @@ gcloud iam service-accounts keys create bigquery-logs-writer-key.json \
 #explains each variable
 python3 bigquery_logging_utility.py --help
 
-python3 bigquery_logging_utility.py -s bigquery_audit_logs -p wam-bam-258119 -d bigquery_logs_dataset -l US -o create
+python3 bigquery_logging_utility.py \
+    -s bigquery_audit_logs \
+    -p wam-bam-258119 \
+    -d bigquery_logs_dataset \
+    -l US \
+    -o create \
+    -f protoPayload.metadata."@type"="type.googleapis.com/google.cloud.audit.BigQueryAuditMetadata"
 
-python3 bigquery_logging_utility.py -s bigquery_audit_logs -p wam-bam-258119 -d bigquery_logs_dataset -l US -o list
+python3 bigquery_logging_utility.py \
+    -s bigquery_audit_logs \
+    -p wam-bam-258119 \
+    -d bigquery_logs_dataset \
+    -l US \
+    -o list \
+    -f protoPayload.metadata."@type"="type.googleapis.com/google.cloud.audit.BigQueryAuditMetadata"
 
-python3 bigquery_logging_utility.py -s bigquery_audit_logs -p wam-bam-258119 -d bigquery_logs_dataset -l US -o update
+python3 bigquery_logging_utility.py \
+    -s bigquery_audit_logs \
+    -p wam-bam-258119 \
+    -d bigquery_logs_dataset \
+    -l US \
+    -o update \
+    -f protoPayload.metadata."@type"="type.googleapis.com/google.cloud.audit.BigQueryAuditMetadata"
 
-python3 bigquery_logging_utility.py -s test_logs -p wam-bam-258119 -d bigquery_logs_dataset -l US -o delete
+python3 bigquery_logging_utility.py \
+    -s bigquery_audit_logs \
+    -p wam-bam-258119 \
+    -d bigquery_logs_dataset \
+    -l US \
+    -o delete \
+    -f protoPayload.metadata."@type"="type.googleapis.com/google.cloud.audit.BigQueryAuditMetadata"
 
 # add roles to the generated log writer service account created automatically
 # ex: p903473854152-104564@gcp-sa-logging.iam.gserviceaccount.com
@@ -91,6 +115,10 @@ gcloud projects add-iam-policy-binding $PROJECT_ID \
 gcloud projects add-iam-policy-binding $PROJECT_ID \
 --member serviceAccount:$LOG_EXPORT_SERVICE_ACCOUNT_EMAIL \
 --role roles/logging.logWriter
+
+#automated tests to see if basic operations work
+pytest tests/test_bigquery_logging_utility.py
+
 ```
 
 > Note: After you perform some query actions in your respective BigQuery project, you can run the below example queries
