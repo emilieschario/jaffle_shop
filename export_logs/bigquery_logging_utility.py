@@ -26,8 +26,6 @@ class export_logs_utility:
         # https://cloud.google.com/bigquery/docs/reference/auditlogs#auditdata_examples
         self.filter_ = filter_
 
-        # self.filter_ = r'protoPayload.metadata."@type"="type.googleapis.com/google.cloud.audit.BigQueryAuditMetadata"'
-
     def operation_sink(self):
         """Main handler that generates or creates sink end to end
         """
