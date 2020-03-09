@@ -13,7 +13,7 @@ os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "bigquery-logs-writer-key.json"
 
 class export_logs_utility:
     def __init__(
-        self, sink_name, project_id, dataset_name, dataset_location, operation
+        self, sink_name, project_id, dataset_name, dataset_location, operation, filter_
     ):
         self.sink_name = sink_name
         self.project_id = project_id
@@ -24,8 +24,9 @@ class export_logs_utility:
         self.dataset_location = dataset_location
         self.operation = operation
         # https://cloud.google.com/bigquery/docs/reference/auditlogs#auditdata_examples
-        # TODO: update for query runs AND dbt jobs
-        self.filter_ = r'protoPayload.metadata."@type"="type.googleapis.com/google.cloud.audit.BigQueryAuditMetadata"'
+        self.filter_ = filter_
+
+        # self.filter_ = r'protoPayload.metadata."@type"="type.googleapis.com/google.cloud.audit.BigQueryAuditMetadata"'
 
     def operation_sink(self):
         """Main handler that generates or creates sink end to end
@@ -33,16 +34,20 @@ class export_logs_utility:
         if self.operation == "create":
             self.create_bigquery_dataset()
             self.create_sink()
+            print("create operation is completed")
         elif self.operation == "list":
             self.list_sinks()
+            print("list operation is completed")
         elif self.operation == "update":
             self.update_sink()
+            print("update operation is completed")
         elif self.operation == "delete":
             # do NOT delete dataset and tables in case they need to remain for audit purposes
             self.delete_sink()
             print(
                 f"Dataset: {self.dataset_name} will NOT be deleted to maintain an audit archive"
             )
+            print("delete operation is completed")
 
     def list_sinks(self):
         """Lists all sinks."""
@@ -121,8 +126,8 @@ class export_logs_utility:
         sink.reload()
 
         sink.filter_ = self.filter_
+        sink.update(unique_writer_identity=True)
         print("Updated sink {}".format(sink.name))
-        sink.update()
 
     def delete_sink(self):
         """Deletes a sink."""
@@ -178,6 +183,15 @@ if __name__ == "__main__":
         help="Whether to create, delete, list, or update the sink",
     )
 
+    parser.add_option(
+        "-f",
+        "--filter",
+        action="store",
+        type="string",
+        dest="filter",
+        help="Filter for the sink export",
+    )
+
     (options, args) = parser.parse_args()
 
     if not options.sink_name:
@@ -198,15 +212,21 @@ if __name__ == "__main__":
     if options.operation not in ("create", "delete", "list", "update"):
         parser.error("operation not compliant to options: create, delete, list, update")
 
+    if not options.filter:
+        parser.error(
+            "filter not given-this variable will only apply to the update operation"
+        )
+
     sink_name = options.sink_name
     project_id = options.project_id
     dataset_name = options.dataset_name
     dataset_location = options.dataset_location
     operation = options.operation
+    filter_ = options.filter
 
     # define the class utility and run the script
     logs_operator = export_logs_utility(
-        sink_name, project_id, dataset_name, dataset_location, operation
+        sink_name, project_id, dataset_name, dataset_location, operation, filter_
     )
 
     # perform log operation based on operation flag
