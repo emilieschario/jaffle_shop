@@ -40,6 +40,9 @@ class export_logs_utility:
         elif self.operation == "delete":
             # do NOT delete dataset and tables in case they need to remain for audit purposes
             self.delete_sink()
+            print(
+                f"Dataset: {self.dataset_name} will NOT be deleted to maintain an audit archive"
+            )
 
     def list_sinks(self):
         """Lists all sinks."""
