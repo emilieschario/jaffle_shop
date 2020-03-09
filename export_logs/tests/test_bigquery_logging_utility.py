@@ -38,7 +38,7 @@ def test_list_sinks(capfd):
         logs_operator.list_sinks()
         out, err = capfd.readouterr()
         # assert that the print message exists in the terminal output
-        assert out == "No sinks."
+        assert out == "No sinks.\n"
     except AssertionError:
         assert "Sink Name:" in out
         assert "Logs Filter:" in out
