@@ -78,7 +78,7 @@ python3 bigquery_logging_utility.py -s bigquery_audit_logs -p wam-bam-258119 -d 
 
 python3 bigquery_logging_utility.py -s bigquery_audit_logs -p wam-bam-258119 -d bigquery_logs_dataset -l US -o update
 
-python3 bigquery_logging_utility.py -s bigquery_audit_logs -p wam-bam-258119 -d bigquery_logs_dataset -l US -o delete
+python3 bigquery_logging_utility.py -s test_logs -p wam-bam-258119 -d bigquery_logs_dataset -l US -o delete
 
 # add roles to the generated log writer service account created automatically
 # ex: p903473854152-104564@gcp-sa-logging.iam.gserviceaccount.com

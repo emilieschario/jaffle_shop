@@ -54,7 +54,11 @@ class export_logs_utility:
             print("No sinks.")
 
         for sink in sinks:
-            print("{}: {} -> {}".format(sink.name, sink.filter_, sink.destination))
+            print(
+                "Sink Name: {}, Logs Filter: {} -> Sink Destination: {}".format(
+                    sink.name, sink.filter_, sink.destination
+                )
+            )
 
     def create_bigquery_dataset(self):
         """Create an empty dataset"""
