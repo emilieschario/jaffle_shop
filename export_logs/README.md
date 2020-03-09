@@ -103,7 +103,7 @@ gcloud projects add-iam-policy-binding $PROJECT_ID \
     COUNT(DISTINCT REGEXP_EXTRACT(protopayload_auditlog.resourceName, '^projects/[^/]+/datasets/[^/]+/tables/(.*)$')) AS active_tables,
     COUNTIF(JSON_EXTRACT(protopayload_auditlog.metadataJson, "$.tableDataRead") IS NOT NULL) AS dataReadEvents,
     COUNTIF(JSON_EXTRACT(protopayload_auditlog.metadataJson, "$.tableDataChange") IS NOT NULL) AS dataChangeEvents
-  FROM `MYPROJECTID.MYDATASETID.cloudaudit_googleapis_com_data_access_2019*`
+  FROM `MYPROJECTID.MYDATASETID.cloudaudit_googleapis_com_data_access_2019*` --replace with the relevant flags you used for the utility
   WHERE
     JSON_EXTRACT(protopayload_auditlog.metadataJson, "$.tableDataRead") IS NOT NULL
     OR JSON_EXTRACT(protopayload_auditlog.metadataJson, "$.tableDataChange") IS NOT NULL
@@ -117,7 +117,7 @@ gcloud projects add-iam-policy-binding $PROJECT_ID \
     COUNT(DISTINCT REGEXP_EXTRACT(protopayload_auditlog.resourceName, '^projects/[^/]+/datasets/[^/]+/tables/(.*)$')) AS active_tables,
     COUNTIF(JSON_EXTRACT(protopayload_auditlog.metadataJson, "$.tableDataRead") IS NOT NULL) AS dataReadEvents,
     COUNTIF(JSON_EXTRACT(protopayload_auditlog.metadataJson, "$.tableDataChange") IS NOT NULL) AS dataChangeEvents
-  FROM `wam-bam-258119.bigquery_logs_dataset.cloudaudit_googleapis_com_data_access_20200306`
+  FROM `MYPROJECTID.MYDATASETID.cloudaudit_googleapis_com_data_access_2020*` --replace with the relevant flags you used for the utility
   WHERE
     JSON_EXTRACT(protopayload_auditlog.metadataJson, "$.tableDataRead") IS NOT NULL
     OR JSON_EXTRACT(protopayload_auditlog.metadataJson, "$.tableDataChange") IS NOT NULL
