@@ -117,6 +117,7 @@ gcloud projects add-iam-policy-binding $PROJECT_ID \
 --role roles/logging.logWriter
 
 #automated tests to see if basic operations work
+# tests do NOT cover flag parsers
 pytest tests/test_bigquery_logging_utility.py
 
 ```
