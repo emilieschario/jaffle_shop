@@ -212,7 +212,7 @@ if __name__ == "__main__":
 
     if not options.filter:
         parser.error(
-            "filter not given-this variable will only apply to the update operation"
+            "filter not given-this variable will only apply to the create/update operations"
         )
 
     sink_name = options.sink_name
