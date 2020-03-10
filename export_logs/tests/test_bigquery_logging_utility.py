@@ -93,13 +93,14 @@ def test_create_sink(capfd):
 
 def test_update_sink(capfd):
     # run the function
+    test_filter = "severity>=INFO"
     logs_operator = export_logs_utility(
         test_variables["sink_name"],
         test_variables["project_id"],
         test_variables["dataset_name"],
         test_variables["dataset_location"],
         "update",
-        test_variables["filter_"],
+        test_filter,
     )
     # create sink
     logs_operator.create_sink()
@@ -107,15 +108,17 @@ def test_update_sink(capfd):
     # update sink
     logs_operator.update_sink()
 
+    # reload the sink
+    logging_client = logging.Client()
+    sink = logging_client.sink(logs_operator.sink_name)
+    sink.reload()
+
     out, err = capfd.readouterr()
     # assert that the print message exists in the terminal output
     assert "Updated sink {}\n".format(test_variables["sink_name"]) in out
 
     # check if the sink filter matches the value we input to update
-    logging_client = logging.Client()
-    sink = logging_client.sink(logs_operator.sink_name)
-    sink.reload()
-    assert sink.filter_ == test_variables["filter_"]
+    assert sink.filter_ == test_filter
 
 
 def test_delete_sink(capfd):
