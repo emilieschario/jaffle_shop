@@ -85,9 +85,16 @@ def test_create_sink(capfd):
 
         logs_operator.create_sink()
         out, err = capfd.readouterr()
+
+        logging_client = logging.Client()
+        sink = logging_client.sink(logs_operator.sink_name)
+        # assert that the sink exists
+        assert sink.exists()
         # assert that the print message exists in the terminal output
         assert out == "Created sink {}\n".format(test_variables["sink_name"])
     except AssertionError:
+        # assert that the sink exists
+        assert sink.exists()
         assert out == "Sink {} already exists.\n".format(test_variables["sink_name"])
 
 
@@ -144,6 +151,12 @@ def test_delete_sink(capfd):
     # delete sink
     logs_operator.delete_sink()
     out, err = capfd.readouterr()
+
     # assert that the print message exists in the terminal output
     assert out == "Deleted sink {}\n".format(test_variables["sink_name"])
+
+    # assert that it does not exist
+    logging_client = logging.Client()
+    sink = logging_client.sink(logs_operator.sink_name)
+    assert not sink.exists()
 
