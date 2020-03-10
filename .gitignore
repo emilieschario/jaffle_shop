@@ -8,3 +8,4 @@ logs/
 py37_venv
 **/service_account.json
 **/bigquery-logs-writer-key.json
+*.pyc
