@@ -4,6 +4,7 @@
 
 - exports logs related to bigquery dataset in scope for auditing
 - streams filtered bigquery dataset logs into bigquery dataset and table of choice
+- assumes you're working within google cloud shell and have permissions to create service accounts and grant other service accounts permissions
 
 ## What does this NOT do?
 
