@@ -5,7 +5,7 @@
 This script is intended to test basic functionality of the export log utility
 """
 
-from google.cloud import bigquery
+from google.cloud import bigquery, logging
 from export_logs.bigquery_logging_utility import export_logs_utility
 import os
 import subprocess
@@ -31,8 +31,8 @@ def test_list_sinks(capfd):
             test_variables["project_id"],
             test_variables["dataset_name"],
             test_variables["dataset_location"],
-            test_variables["filter_"],
             "list",
+            test_variables["filter_"],
         )
 
         logs_operator.list_sinks()
@@ -57,8 +57,8 @@ def test_create_bigquery_dataset():
             test_variables["project_id"],
             test_variables["dataset_name"],
             test_variables["dataset_location"],
-            test_variables["filter_"],
             "create",
+            test_variables["filter_"],
         )
         logs_operator.create_bigquery_dataset()
 
@@ -79,8 +79,8 @@ def test_create_sink(capfd):
             test_variables["project_id"],
             test_variables["dataset_name"],
             test_variables["dataset_location"],
-            test_variables["filter_"],
             "create",
+            test_variables["filter_"],
         )
 
         logs_operator.create_sink()
@@ -98,17 +98,24 @@ def test_update_sink(capfd):
         test_variables["project_id"],
         test_variables["dataset_name"],
         test_variables["dataset_location"],
+        "update",
         test_variables["filter_"],
-        "delete",
     )
     # create sink
     logs_operator.create_sink()
 
-    # delete sink
+    # update sink
     logs_operator.update_sink()
+
     out, err = capfd.readouterr()
     # assert that the print message exists in the terminal output
     assert "Updated sink {}\n".format(test_variables["sink_name"]) in out
+
+    # check if the sink filter matches the value we input to update
+    logging_client = logging.Client()
+    sink = logging_client.sink(logs_operator.sink_name)
+    sink.reload()
+    assert sink.filter_ == test_variables["filter_"]
 
 
 def test_delete_sink(capfd):
@@ -118,8 +125,8 @@ def test_delete_sink(capfd):
         test_variables["project_id"],
         test_variables["dataset_name"],
         test_variables["dataset_location"],
-        test_variables["filter_"],
         "delete",
+        test_variables["filter_"],
     )
 
     # delete sink
