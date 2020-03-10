@@ -92,7 +92,19 @@ def test_create_sink(capfd):
 
 
 def test_update_sink(capfd):
-    # run the function
+    # setup sink creation
+    logs_operator = export_logs_utility(
+        test_variables["sink_name"],
+        test_variables["project_id"],
+        test_variables["dataset_name"],
+        test_variables["dataset_location"],
+        "create",
+        test_variables["filter_"],
+    )
+    # create sink
+    logs_operator.create_sink()
+
+    # setup sink update
     test_filter = "severity>=INFO"
     logs_operator = export_logs_utility(
         test_variables["sink_name"],
@@ -102,9 +114,6 @@ def test_update_sink(capfd):
         "update",
         test_filter,
     )
-    # create sink
-    logs_operator.create_sink()
-
     # update sink
     logs_operator.update_sink()
 
