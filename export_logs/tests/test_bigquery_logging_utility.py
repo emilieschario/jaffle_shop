@@ -48,8 +48,8 @@ def test_list_sinks(capfd):
 def test_create_bigquery_dataset():
     try:
         # expected result
-        expected_result = (
-            "Dataset(DatasetReference('wam-bam-258119', 'test_logs_dataset'))"
+        expected_result = "Dataset(DatasetReference('{}', '{}'))".format(
+            test_variables["project_id"], test_variables["dataset_name"]
         )
         # run the function
         logs_operator = export_logs_utility(
