@@ -126,7 +126,7 @@ class export_logs_utility:
         sink.filter_ = self.filter_
         sink.update(unique_writer_identity=True)
         print("Updated sink {}".format(sink.name))
-        print(sink.filter_)
+        print(f"New Filter: {sink.filter_}")
 
     def delete_sink(self):
         """Deletes a sink."""
