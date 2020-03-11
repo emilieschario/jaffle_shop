@@ -148,12 +148,19 @@ def test_delete_sink(capfd):
         test_variables["filter_"],
     )
 
+    # create sink
+    logs_operator.create_sink()
+    logging_client = logging.Client()
+    sink = logging_client.sink(logs_operator.sink_name)
+    # assert that the sink exists
+    assert sink.exists()
+
     # delete sink
     logs_operator.delete_sink()
     out, err = capfd.readouterr()
 
     # assert that the print message exists in the terminal output
-    assert out == "Deleted sink {}\n".format(test_variables["sink_name"])
+    assert "Deleted sink {}\n".format(test_variables["sink_name"]) in out
 
     # assert that it does not exist
     logging_client = logging.Client()
