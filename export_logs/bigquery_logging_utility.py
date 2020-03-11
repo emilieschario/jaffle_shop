@@ -126,6 +126,7 @@ class export_logs_utility:
         sink.filter_ = self.filter_
         sink.update(unique_writer_identity=True)
         print("Updated sink {}".format(sink.name))
+        print(sink.filter_)
 
     def delete_sink(self):
         """Deletes a sink."""
@@ -147,6 +148,7 @@ if __name__ == "__main__":
         type=str,
         dest="sink_name",
         help="name of sink for exporting logs",
+        required=True,
     )
     parser.add_argument(
         "-p",
@@ -154,6 +156,7 @@ if __name__ == "__main__":
         type=str,
         dest="project_id",
         help="name of Google Cloud project that will create the export logs",
+        required=True,
     )
     parser.add_argument(
         "-d",
@@ -161,6 +164,7 @@ if __name__ == "__main__":
         type=str,
         dest="dataset_name",
         help="Name of dataset to create or already existing to store exported logs",
+        required=True,
     )
     parser.add_argument(
         "-l",
@@ -168,6 +172,7 @@ if __name__ == "__main__":
         type=str,
         dest="dataset_location",
         help="Location of dataset to create to store exported logs",
+        required=True,
     )
     parser.add_argument(
         "-o",
@@ -175,6 +180,7 @@ if __name__ == "__main__":
         type=str,
         dest="operation",
         help="Whether to create, delete, list, or update the sink",
+        required=True,
     )
     parser.add_argument(
         "-f",
@@ -182,34 +188,12 @@ if __name__ == "__main__":
         type=str,
         dest="filter",
         help="Filter for the sink export-this variable will only apply to the create/update operations",
+        required=True,
     )
 
     options = parser.parse_args()
 
     print(options)
-
-    if not options.sink_name:
-        parser.error("sink_name not given")
-
-    if not options.project_id:
-        parser.error("project_id not given")
-
-    if not options.dataset_name:
-        parser.error("dataset_name not given")
-
-    if not options.dataset_location:
-        parser.error("dataset_location not given")
-
-    if not options.operation:
-        parser.error("operation not given")
-
-    if options.operation not in ("create", "delete", "list", "update"):
-        parser.error("operation not compliant to options: create, delete, list, update")
-
-    if not options.filter:
-        parser.error(
-            "filter not given-this variable will only apply to the create/update operations"
-        )
 
     sink_name = options.sink_name
     project_id = options.project_id
