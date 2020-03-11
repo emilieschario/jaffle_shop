@@ -2,13 +2,15 @@
 
 ## What does this do?
 
-- exports logs related to bigquery dataset in scope for auditing
-- streams filtered bigquery dataset logs into bigquery dataset and table of choice
-- assumes you're working within google cloud shell and have permissions to create service accounts and grant other service accounts permissions
+- exports logs related to any bigquery operations in scope for auditing
+- streams filtered bigquery dataset logs into bigquery dataset of choice
+- assumes you're working within google cloud shell and have permissions to create service accounts and grant other service account's permissions
+- unit tests for basic functionality
 
 ## What does this NOT do?
 
 - any specific transformations
+- unit tests for flag arguments
 
 ## How to run this?
 
