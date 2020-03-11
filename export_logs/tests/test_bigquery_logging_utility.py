@@ -163,7 +163,5 @@ def test_delete_sink(capfd):
     assert "Deleted sink {}\n".format(test_variables["sink_name"]) in out
 
     # assert that it does not exist
-    logging_client = logging.Client()
-    sink = logging_client.sink(logs_operator.sink_name)
     assert not sink.exists()
 
