@@ -15,6 +15,10 @@
 [documentation](https://cloud.google.com/logging/docs/api/tasks/exporting-logs)
 
 ```bash
+# clone repo
+git clone https://github.com/sungchun12/dbt_bigquery_example.git
+cd dbt_bigquery_example
+
 # create a virtual environment if not done already
 python3 -m venv py37_venv
 source py37_venv/bin/activate
