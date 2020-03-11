@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 #!/usr/bin/env python3
 
-from google.cloud import bigquery, logging
 import os
-from optparse import OptionParser
-from google.cloud.exceptions import NotFound, Conflict
+import argparse
 
+from google.cloud import bigquery, logging
+from google.cloud.exceptions import NotFound, Conflict
 
 # TODO: (developer)-update this based on testing needs
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "bigquery-logs-writer-key.json"
@@ -126,6 +126,7 @@ class export_logs_utility:
         sink.filter_ = self.filter_
         sink.update(unique_writer_identity=True)
         print("Updated sink {}".format(sink.name))
+        print(f"New Filter: {sink.filter_}")
 
     def delete_sink(self):
         """Deletes a sink."""
@@ -138,82 +139,61 @@ class export_logs_utility:
 
 
 if __name__ == "__main__":
-    use = "Usage: %prog -s sink_name -p project_id -d dataset_name -l dataset_location -o operation"
-    parser = OptionParser(usage=use)
-    parser.add_option(
+    parser = argparse.ArgumentParser(
+        description="Usage: %prog -s sink_name -p project_id -d dataset_name -l dataset_location -o operation"
+    )
+    parser.add_argument(
         "-s",
-        "--sink_name",
         action="store",
-        type="string",
+        type=str,
         dest="sink_name",
         help="name of sink for exporting logs",
+        required=True,
     )
-    parser.add_option(
+    parser.add_argument(
         "-p",
-        "--project_id",
         action="store",
-        type="string",
+        type=str,
         dest="project_id",
         help="name of Google Cloud project that will create the export logs",
+        required=True,
     )
-    parser.add_option(
+    parser.add_argument(
         "-d",
-        "--dataset_name",
         action="store",
-        type="string",
+        type=str,
         dest="dataset_name",
         help="Name of dataset to create or already existing to store exported logs",
+        required=True,
     )
-    parser.add_option(
+    parser.add_argument(
         "-l",
-        "--dataset_location",
         action="store",
-        type="string",
+        type=str,
         dest="dataset_location",
         help="Location of dataset to create to store exported logs",
+        required=True,
     )
-    parser.add_option(
+    parser.add_argument(
         "-o",
-        "--operation",
         action="store",
-        type="string",
+        type=str,
         dest="operation",
         help="Whether to create, delete, list, or update the sink",
+        required=True,
     )
-
-    parser.add_option(
+    parser.add_argument(
         "-f",
-        "--filter",
         action="store",
-        type="string",
+        type=str,
         dest="filter",
-        help="Filter for the sink export",
+        help="Filter for the sink export-this variable will only apply to the create/update operations",
+        required=True,
     )
 
-    (options, args) = parser.parse_args()
+    options = parser.parse_args()
 
-    if not options.sink_name:
-        parser.error("sink_name not given")
-
-    if not options.project_id:
-        parser.error("project_id not given")
-
-    if not options.dataset_name:
-        parser.error("dataset_name not given")
-
-    if not options.dataset_location:
-        parser.error("dataset_location not given")
-
-    if not options.operation:
-        parser.error("operation not given")
-
-    if options.operation not in ("create", "delete", "list", "update"):
-        parser.error("operation not compliant to options: create, delete, list, update")
-
-    if not options.filter:
-        parser.error(
-            "filter not given-this variable will only apply to the create/update operations"
-        )
+    print(options)
 
     sink_name = options.sink_name
     project_id = options.project_id
