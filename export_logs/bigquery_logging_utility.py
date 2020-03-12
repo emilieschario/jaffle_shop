@@ -20,7 +20,7 @@ class export_logs_utility:
         # setup bigquery config
         self.dataset_name = dataset_name
         self.bigquery_client = bigquery.Client(self.project_id)
-        self.dataset = self.bigquery_client.dataset(self.dataset_name)
+        self.dataset = bigquery.DatasetReference(self.project_id, self.dataset_name)
         self.dataset_location = dataset_location
         self.operation = operation
         # https://cloud.google.com/bigquery/docs/reference/auditlogs#auditdata_examples
