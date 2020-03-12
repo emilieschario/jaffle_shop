@@ -19,7 +19,7 @@
 ```bash
 # clone repo
 git clone https://github.com/sungchun12/dbt_bigquery_example.git
-cd dbt_bigquery_example
+cd dbt_bigquery_example/cd export_logs
 
 # create a virtual environment if not done already
 python3 -m venv py37_venv
@@ -28,8 +28,6 @@ pip install --upgrade pip
 pip install -r requirements.txt
 
 # setup a service account with "Logging/Logs Configuration Writer" permissions
-cd export_logs
-
 # example environment variables below
 PROJECT_ID="wam-bam-258119"
 SERVICE_ACCOUNT_NAME="bigquery-logs-writer"
