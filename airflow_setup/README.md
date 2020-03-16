@@ -375,7 +375,7 @@ http://35.245.192.158:8080/admin/
 # delete your infrastructure
 gcloud beta sql instances delete $SQL_INSTANCE_NAME
 
-gcloud compute instances delete $COMPUTE_INSTANCE_NAME
+gcloud compute instances delete $COMPUTE_INSTANCE_NAME --zone $SQL_INSTANCE_ZONE
 
 
 ```
