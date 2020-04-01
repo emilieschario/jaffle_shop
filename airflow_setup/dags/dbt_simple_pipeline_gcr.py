@@ -31,8 +31,8 @@ with DAG(
         docker_url="unix://var/run/docker.sock",
         network_mode="bridge",
         volumes=[
-            "/home/realsww123/dbt_bigquery_example/:/dbt",
-            "/home/realsww123/dbt_bigquery_example/profiles.yml:/root/.dbt/profiles.yml",
+            "/home/schung/dbt_bigquery_example/:/dbt",
+            "/home/schung/dbt_bigquery_example/profiles.yml:/root/.dbt/profiles.yml",
         ],
     )
     t2 = DockerOperator(
@@ -45,8 +45,8 @@ with DAG(
         docker_url="unix://var/run/docker.sock",
         network_mode="bridge",
         volumes=[
-            "/home/realsww123/dbt_bigquery_example/:/dbt",
-            "/home/realsww123/dbt_bigquery_example/profiles.yml:/root/.dbt/profiles.yml",
+            "/home/schung/dbt_bigquery_example/:/dbt",
+            "/home/schung/dbt_bigquery_example/profiles.yml:/root/.dbt/profiles.yml",
         ],
     )
 
@@ -60,8 +60,8 @@ with DAG(
         docker_url="unix://var/run/docker.sock",
         network_mode="bridge",
         volumes=[
-            "/home/realsww123/dbt_bigquery_example/:/dbt",
-            "/home/realsww123/dbt_bigquery_example/profiles.yml:/root/.dbt/profiles.yml",
+            "/home/schung/dbt_bigquery_example/:/dbt",
+            "/home/schung/dbt_bigquery_example/profiles.yml:/root/.dbt/profiles.yml",
         ],
     )
 
@@ -75,8 +75,8 @@ with DAG(
         docker_url="unix://var/run/docker.sock",
         network_mode="bridge",
         volumes=[
-            "/home/realsww123/dbt_bigquery_example/:/dbt",
-            "/home/realsww123/dbt_bigquery_example/profiles.yml:/root/.dbt/profiles.yml",
+            "/home/schung/dbt_bigquery_example/:/dbt",
+            "/home/schung/dbt_bigquery_example/profiles.yml:/root/.dbt/profiles.yml",
         ],
     )
 
@@ -90,8 +90,8 @@ with DAG(
         docker_url="unix://var/run/docker.sock",
         network_mode="bridge",
         volumes=[
-            "/home/realsww123/dbt_bigquery_example/:/dbt",
-            "/home/realsww123/dbt_bigquery_example/profiles.yml:/root/.dbt/profiles.yml",
+            "/home/schung/dbt_bigquery_example/:/dbt",
+            "/home/schung/dbt_bigquery_example/profiles.yml:/root/.dbt/profiles.yml",
         ],
     )
 

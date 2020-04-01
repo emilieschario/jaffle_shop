@@ -190,6 +190,196 @@ airflow webserver -p 8080
 
 ```
 
+## How to setup an ad hoc airflow vm and cloud sql postgresql database backend for development?
+
+- This is a scrappy process to get something that mimics in basic functionality the look and feel of a manual cloud setup for airflow
+- I recommend using terraform for robustness
+- This is meant to play around with the infrastructure quickly, so focus can be spent on pipeline development
+- I recommend using docker for production and overall development, but this is built for those that want to work with gcloud and not mess with docker for now
+
+What does this do?
+
+- sets up a cloud sql database only accessible from private IP(no public internet traffic)
+- sets up a compute engine VM to install airflow on
+- connects the compute engine VM to the cloud sql database
+
+What does this NOT do?
+
+- template code for a production scale implementation
+
+```bash
+#!/bin/bash
+
+# https://cloud.google.com/vpc/docs/configure-private-services-access#allocating-range
+# https://github.com/mikeghen/airflow-tutorial/blob/master/README.md
+
+# update the environment variables below
+HOST_PROJECT="wam-bam-258119"
+ADDRESS_NAME="airflow-network" # do not choose "default"
+NETWORK_NAME="default"
+COMPUTE_INSTANCE_NAME="airflow-vm"
+
+SQL_INSTANCE_NAME="airflow-test" # if you run the below commands multiple times, this must change each time
+SQL_INSTANCE_TIER="db-g1-small" # "db-n1-standard-4" is not a shared core tier type, MUST use shared core type
+SQL_INSTANCE_ZONE="us-east4-a"
+SQL_DATABASE_NAME="airflow-db-demo"
+SQL_USER_NAME="airflow"
+SQL_USER_PASS="airflow"
+
+# Enable the Services Networking API in host project
+gcloud services enable servicenetworking.googleapis.com \
+    --project=$HOST_PROJECT
+
+# Create an address allocation for CloudSQL private IP access
+gcloud compute addresses create $ADDRESS_NAME \
+    --global \
+    --purpose=VPC_PEERING \
+    --prefix-length=24 \
+    --network=$NETWORK_NAME \
+    --project=$HOST_PROJECT
+
+# check if the address was created
+gcloud compute addresses list --global --filter="purpose=VPC_PEERING"
+
+# example output
+# NAME             ADDRESS/RANGE   TYPE      PURPOSE      NETWORK  REGION  SUBNET  STATUS
+# airflow-network  10.26.211.0/24  INTERNAL  VPC_PEERING  default                  RESERVED
+
+# Create services connection or update if you messed up the first time
+# gcloud services vpc-peerings update \
+#     --service=servicenetworking.googleapis.com \
+#     --network=$NETWORK_NAME \
+#     --project=$HOST_PROJECT \
+#     --ranges=$ADDRESS_NAME \
+#     --force
+gcloud services vpc-peerings connect \
+    --service=servicenetworking.googleapis.com \
+    --network=$NETWORK_NAME \
+    --project=$HOST_PROJECT \
+    --ranges=$ADDRESS_NAME
+
+# Build a new CloudSQL instance in the host VPC
+gcloud beta sql instances create $SQL_INSTANCE_NAME \
+    --project=$HOST_PROJECT \
+    --network="projects/${HOST_PROJECT}/global/networks/${NETWORK_NAME}" \
+    --no-assign-ip \
+    --tier=$SQL_INSTANCE_TIER \
+    --database-version="POSTGRES_11" \
+    --zone=$SQL_INSTANCE_ZONE \
+    --storage-size=10
+
+# example output-is not a real private IP-DUH!
+# NAME                   DATABASE_VERSION  LOCATION    TIER         PRIMARY_ADDRESS  PRIVATE_ADDRESS  STATUS
+# airflow-demonstration  POSTGRES_11       us-east4-a  db-g1-small  -                10.20.30.3       RUNNABLE
+
+# turn on cloud sql instance if stopped in the past
+# ex: gcloud sql instances patch $SQL_INSTANCE_NAME --activation-policy ALWAYS
+
+# Create a new database and user
+gcloud beta sql databases create $SQL_DATABASE_NAME \
+    --instance=$SQL_INSTANCE_NAME
+
+gcloud beta sql users create $SQL_USER_NAME \
+    --instance=$SQL_INSTANCE_NAME \
+    --password=$SQL_USER_PASS
+
+# create a compute engine instance
+# note: rhel(red hat enterprise linux) is common in enterprise setups
+gcloud compute instances create $COMPUTE_INSTANCE_NAME \
+    --image-family centos-8 \
+    --image-project centos-cloud \
+    --network=$NETWORK_NAME \
+    --zone=$SQL_INSTANCE_ZONE
+
+# turn on compute instance if stopped in the past
+gcloud compute instances start $COMPUTE_INSTANCE_NAME --zone=$SQL_INSTANCE_ZONE
+
+# enable a firewall to see the airflow web interface
+# ANYONE can view your webserver based on this rule so be careful
+# this is just a quick demo to get familiar with airflow infrastructure in GCP
+# not something you copy and paste for production
+gcloud compute firewall-rules create airflow-rule \
+    --allow=tcp:8080,udp:8080 \
+    --network=$NETWORK_NAME \
+    --direction=INGRESS \
+    --enable-logging \
+    --description="View the airflow webserver UI"
+
+
+# ssh into the VM
+gcloud compute ssh --project $HOST_PROJECT --zone $SQL_INSTANCE_ZONE $COMPUTE_INSTANCE_NAME
+
+# set the environment variables above again into the VM
+
+# test if you can connect through compute engine airflow vm
+sudo yum install postgresql
+# example: psql -h 10.18.16.5 -d $SQL_DATABASE_NAME -U $SQL_USER_NAME
+psql -h [CLOUD_SQL_PRIVATE_IP_ADDR] -d $SQL_DATABASE_NAME -U $SQL_USER_NAME
+
+# exit out with below
+ctrl+z
+
+# install git
+sudo yum install git
+
+# clone the repo
+git clone https://github.com/sungchun12/dbt_bigquery_example.git
+cd dbt_bigquery_example/airflow_setup
+
+# set environment variable for database connection
+# export AIRFLOW__CORE__SQL_ALCHEMY_CONN="postgresql://${google_sql_user.airflow.name}:${random_password.db_pass.result}@${google_sql_database_instance.airflowdb-instance.private_ip_address}:5432/${google_sql_database.airflowdb.name}"
+export AIRFLOW__CORE__SQL_ALCHEMY_CONN="postgresql://$SQL_USER_NAME:$SQL_USER_PASS@10.18.16.5:5432/$SQL_DATABASE_NAME"
+
+sudo yum install platform-python-devel platform-python-pip platform-python-setuptools python3-pip-wheel gcc gcc-c++ docker
+python3 -m venv py36-venv
+source py36-venv/bin/activate
+pip install --upgrade pip
+pip install --upgrade setuptools
+sudo python3 -m pip install -r requirements.txt # this take a couple minutes to install
+
+# setup airflow environment
+export AIRFLOW_HOME="$(pwd)"
+
+# reinitialize the database
+airflow initdb
+
+# change executor to LocalExecutor in airflow.cfg file using bash
+sed -i 's/executor = SequentialExecutor/executor = LocalExecutor/' /home/sung/dbt_bigquery_example/airflow_setup/airflow.cfg
+
+# reinitialize the database
+airflow initdb
+
+airflow list_dags
+
+airflow run add_gcp_connection add_gcp_connection_python 2001-01-01
+
+airflow run add_gcp_connection add_docker_connection_python 2001-01-01
+
+#configure docker
+gcloud auth configure-docker
+
+docker build -t dbt_docker .
+
+# update the volume paths in the server files-use git pull after updating in your local environment
+
+# run an example DAG with parallel tasks to test if things are working correctly
+airflow backfill dbt_pipeline_gcr -s 2020-01-01 -e 2020-01-02
+
+# start the airflow server
+# Note, instead of clicking on http://0.0.0.0:8080, replace 0.0.0.0 with the external IP of the VM
+airflow webserver -p 8080
+
+#example
+http://35.245.192.158:8080/admin/
+
+# delete your infrastructure
+gcloud beta sql instances delete $SQL_INSTANCE_NAME
+
+gcloud compute instances delete $COMPUTE_INSTANCE_NAME --zone $SQL_INSTANCE_ZONE
+
+
+```
+
 ## Notes
 
 - docker operator works without including the volumes parameter

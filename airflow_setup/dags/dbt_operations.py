@@ -21,16 +21,17 @@ with DAG(
 
     t2 = DockerOperator(
         task_id="docker_command",
-        image="dbt_docker:latest",
+        docker_conn_id="gcr_docker_connection",
+        image="gcr.io/wam-bam-258119/dbt_docker:latest",
         api_version="auto",
         auto_remove=True,
         command="dbt debug",
         docker_url="unix://var/run/docker.sock",
         network_mode="bridge",
-        # volumes=[
-        #     "/home/airflow/dbt_files:/dbt",
-        #     "/home/airflow/dbt_files/profiles.yml:/root/.dbt/profiles.yml",
-        # ],
+        volumes=[
+            "/home/schung/dbt_bigquery_example/:/dbt",
+            "/home/schung/dbt_bigquery_example/profiles.yml:/root/.dbt/profiles.yml",
+        ],
     )
 
     t3 = BashOperator(task_id="print_hello", bash_command='echo "hello world"')
