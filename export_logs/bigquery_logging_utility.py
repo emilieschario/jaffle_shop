@@ -66,13 +66,18 @@ class export_logs_utility:
     def create_bigquery_dataset(self):
         """Create an empty dataset"""
         try:
+            # setup the dataset name
+            dataset_id = f"{self.project_id}.{self.dataset_name}"
+            dataset = bigquery.Dataset(dataset_id)
+
             # Specify the geographic location where the dataset should reside.
-            self.dataset.location = self.dataset_location
+            dataset.location = "us-east4"
+
             # Send the dataset to the API for creation.
             # Raises google.api_core.exceptions.Conflict if the Dataset already
             # exists within the project.
             dataset = self.bigquery_client.create_dataset(
-                self.dataset
+                dataset
             )  # Make an API request.
             print(
                 "Created dataset {}.{}".format(
