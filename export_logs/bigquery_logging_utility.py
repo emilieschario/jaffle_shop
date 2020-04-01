@@ -71,7 +71,7 @@ class export_logs_utility:
             dataset = bigquery.Dataset(dataset_id)
 
             # Specify the geographic location where the dataset should reside.
-            dataset.location = "us-east4"
+            dataset.location = self.dataset_location
 
             # Send the dataset to the API for creation.
             # Raises google.api_core.exceptions.Conflict if the Dataset already
