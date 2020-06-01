@@ -34,7 +34,12 @@ To get up and running with this project:
 3. Change into the `dbt_bigquery_example` directory from the command line:
 
 ```bash
+# setup python virtual environment locally
 cd dbt_bigquery_example
+python3 -m venv py37_venv
+source py37_venv/bin/activate
+pip install --upgrade pip
+pip install -r requirements.txt
 ```
 
 4. Set up a profile called `jaffle_shop` to connect to a data warehouse by
@@ -49,9 +54,10 @@ cd dbt_bigquery_example
 
 ```bash
 # set the profiles directory in an environment variable, so debug points to the right files
-# replace the below with your own repo directory
-export DBT_PROFILES_DIR=<path to your repository>
 # set DBT_PROFILES_DIR=C:\Users\sungwon.chung\Desktop\repos\dbt_bigquery_example # for windows
+# replace the below with your own repo directory
+export DBT_PROFILES_DIR=$(pwd)
+
 
 # connect to GCP
 gcloud auth application-default login --scopes=https://www.googleapis.com/auth/userinfo.email,https://www.googleapis.com/auth/cloud-platform,https://www.googleapis.com/auth/drive.readonly
