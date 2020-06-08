@@ -83,7 +83,7 @@ dbt seed --show
 
 6. Run the models:
 
-Based on files in this directory: [models](/models)
+> Note: Based on files in this directory: [models](/models)
 
 ```bash
 # creates tables/views based off the sql and yml files
