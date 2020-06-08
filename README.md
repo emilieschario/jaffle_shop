@@ -23,34 +23,38 @@ This [dbt](https://www.getdbt.com/) project has a split personality:
 
 ### Using this project as a tutorial
 
-> Note: Likely use [Airflow's BashOperator](https://docs.getdbt.com/docs/running-dbt-in-production#section-using-airflow) for production deployments
+> Note: Likely use [DockerOperator or KubernetesPodOperator](https://gitlab.com/gitlab-data/analytics/-/blob/master/dags/transformation/dbt_poc.py#L47) for production deployments
 
 To get up and running with this project:
 
-1. Install dbt using [these instructions](https://docs.getdbt.com/docs/installation).
-
-2. Clone this repository. If you need extra help, see [these instructions](https://docs.getdbt.com/docs/use-an-existing-project).
-
-3. Change into the `dbt_bigquery_example` directory from the command line:
+1. Clone this repository. If you need extra help, see [these instructions](https://docs.getdbt.com/docs/use-an-existing-project).
 
 ```bash
+git clone https://github.com/sungchun12/dbt_bigquery_example.git
+```
+
+2. Install dbt using the below or [these instructions](https://docs.getdbt.com/docs/installation).
+
+```bash
+# change into directory
+cd dbt_bigquery_example/
+
 # setup python virtual environment locally
-cd dbt_bigquery_example
 python3 -m venv py37_venv
 source py37_venv/bin/activate
 pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
-4. Set up a profile called `jaffle_shop` to connect to a data warehouse by
-   following [these instructions](https://docs.getdbt.com/docs/configure-your-profile).
+3. Set up a [profile](profiles.yml) called `jaffle_shop` to connect to a data warehouse by
+   following [these instructions](https://docs.getdbt.com/docs/running-a-dbt-project/using-the-command-line-interface/configure-your-profile/).
    If you have access to a data warehouse, you can use those credentials – we
-   recommend setting your [target schema](https://docs.getdbt.com/docs/configure-your-profile#section-populating-your-profile)
+   recommend setting your [target schema](https://docs.getdbt.com/docs/running-a-dbt-project/using-the-command-line-interface/configure-your-profile/#populating-your-profile)
    to be a new schema (dbt will create the schema for you, as long as you have
    the right priviliges). If you don't have access to an existing data warehouse,
    you can also setup a local postgres database and connect to it in your profile.
 
-5. Ensure your profile is setup correctly from the command line:
+4. Ensure your profile is setup correctly from the command line:
 
 ```bash
 # set the profiles directory in an environment variable, so debug points to the right files
@@ -66,18 +70,18 @@ gcloud auth application-default login --scopes=https://www.googleapis.com/auth/u
 dbt debug
 ```
 
-6. Load the CSVs with the demo data set. This materializes the CSVs as tables in
+5. Load the CSVs with the demo data set. This materializes the CSVs as tables in
    your target schema. Note that a typical dbt project **does not require this
    step** since dbt assumes your raw data is already in your warehouse.
 
-> Note: You'll likely use [sources](https://docs.getdbt.com/docs/using-sources#section-defining-sources) in your `schema.yml` files because dbt assumes data is already loaded into your warehouse
+> Note: You'll likely use [sources](https://docs.getdbt.com/docs/using-sources#section-defining-sources) in your [`sources.yml`](/models/sources/sources.yml) files because dbt assumes data is already loaded into your warehouse
 
 ```bash
 # see a full breakdown of how dbt is creating tables in bigquery based on the csv files in the data directory
 dbt seed --show
 ```
 
-7. Run the models:
+6. Run the models:
 
 Based on files in this directory: [models](/models)
 
@@ -104,7 +108,7 @@ dbt run --model source:dbt_bq_example.raw_orders+
 
 > **NOTE:** If this steps fails, it might be that you need to make small changes to the SQL in the models folder to adjust for the flavor of SQL of your target database. Definitely consider this if you are using a community-contributed adapter.
 
-8. Test the output of the models:
+7. Test the output of the models:
 
 runs through all the tests defined in these specific file: [models/core/schema.yml](/models/core/schema.yml), [models/staging/schema.yml](/models/staging/schema.yml)
 
@@ -126,21 +130,22 @@ dbt source snapshot-freshness
 dbt source snapshot-freshness --select dbt_bq_example
 ```
 
-9. Generate documentation for the project:
+8. Generate documentation for the project:
 
 ```bash
 # sets up the files based on logs from the above run to eventually serve in a static website
 dbt docs generate
 ```
 
-10. View the documentation for the project:
+9. View the documentation for the project:
 
 ```bash
 # launches an easy-to-use static website to navigate data lineage and understand table structures
 dbt docs serve
 ```
 
-11. Deploy documentation as a public website on GCP Cloud Run
+10. Deploy documentation as a public website on GCP Cloud Run
+    > Note: `dbt docs generate` must be run before the below can be deployed
 
 ```bash
 # build the docker image locally and tag it to eventually push to container registry
@@ -163,13 +168,11 @@ docker push gcr.io/[PROJECT-ID]/[IMAGE]
 # --platform managed \
 # --allow-unauthenticated
 gcloud beta run deploy dbt-docs-cloud-run \
---image gcr.io/[PROJECT-ID]/[IMAGE] \
---region [REGION] \
---platform managed \
---allow-unauthenticated
+  --image gcr.io/[PROJECT-ID]/[IMAGE] \
+  --region [REGION] \
+  --platform managed \
+  --allow-unauthenticated
 ```
-
-> Note: [dbt style guide](https://github.com/fishtown-analytics/corp/blob/master/dbt_coding_conventions.md)
 
 11. Incremental updates to existing tables: [click here](https://docs.getdbt.com/docs/configuring-incremental-models#section-what-if-the-columns-of-my-incremental-model-change-)
 
@@ -199,6 +202,8 @@ from raw_app_data.events
 
 {% endif %}
 ```
+
+> Note: [dbt style guide](https://github.com/fishtown-analytics/corp/blob/master/dbt_coding_conventions.md)
 
 ### What is a jaffle?
 
