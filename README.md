@@ -25,7 +25,7 @@ This [dbt](https://www.getdbt.com/) project has a split personality:
 
 > Note: Likely use [DockerOperator or KubernetesPodOperator](https://gitlab.com/gitlab-data/analytics/-/blob/master/dags/transformation/dbt_poc.py#L47) for production deployments
 
-To get up and running with this project:
+To get up and running with this project
 
 1. Clone this repository. If you need extra help, see [these instructions](https://docs.getdbt.com/docs/use-an-existing-project).
 
@@ -33,7 +33,7 @@ To get up and running with this project:
 git clone https://github.com/sungchun12/dbt_bigquery_example.git
 ```
 
-2. Install dbt using the below or [these instructions](https://docs.getdbt.com/docs/installation).
+2. Install dbt using the below or [these instructions](https://docs.getdbt.com/docs/installation)
 
 ```bash
 # change into directory
@@ -54,7 +54,7 @@ pip install -r requirements.txt
    the right priviliges). If you don't have access to an existing data warehouse,
    you can also setup a local postgres database and connect to it in your profile.
 
-4. Ensure your profile is setup correctly from the command line:
+4. Ensure your profile is setup correctly from the command line
 
 ```bash
 # set the profiles directory in an environment variable, so debug points to the right files
@@ -81,7 +81,7 @@ dbt debug
 dbt seed --show
 ```
 
-6. Run the models:
+6. Run the models
 
 > Note: Based on files in this directory: [models](/models)
 
@@ -108,7 +108,7 @@ dbt run --model source:dbt_bq_example.raw_orders+
 
 > **NOTE:** If this steps fails, it might be that you need to make small changes to the SQL in the models folder to adjust for the flavor of SQL of your target database. Definitely consider this if you are using a community-contributed adapter.
 
-7. Test the output of the models:
+7. Test the output of the models
 
 > Note: runs through all the tests defined in these specific file: [models/core/schema.yml](/models/core/schema.yml), [models/staging/schema.yml](/models/staging/schema.yml)
 
@@ -130,14 +130,14 @@ dbt source snapshot-freshness
 dbt source snapshot-freshness --select dbt_bq_example
 ```
 
-8. Generate documentation for the project:
+8. Generate documentation for the project
 
 ```bash
 # sets up the files based on logs from the above run to eventually serve in a static website
 dbt docs generate
 ```
 
-9. View the documentation for the project:
+9. View the documentation for the project
 
 ```bash
 # launches an easy-to-use static website to navigate data lineage and understand table structures
