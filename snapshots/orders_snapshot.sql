@@ -23,6 +23,6 @@
     }}
 
 -- Pro-Tip: Use sources in snapshots!
-select * from {{ ref('raw_orders') }}
+select * from {{ source('dbt_bq_example','raw_orders') }}
     
 {% endsnapshot %}
