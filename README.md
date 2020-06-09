@@ -148,6 +148,9 @@ dbt docs serve
     > Note: `dbt docs generate` must be run before the below can be deployed
 
 ```bash
+# enable cloud run api on Google Cloud
+gcloud services enable run.googleapis.com
+
 # build the docker image locally and tag it to eventually push to container registry
 # does not take into account gitignore constraints given it's built locally
 # ex: docker build . --tag gcr.io/wam-bam-258119/dbt-docs-cloud-run
