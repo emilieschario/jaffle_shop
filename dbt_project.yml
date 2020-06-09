@@ -33,9 +33,10 @@ quoting:
 
 # https://docs.getdbt.com/docs/configuring-incremental-models
 models:
+  # TODO: 0.17.0 has an error with persist_docs and interpets it as unused
   persist_docs: #allows for docs to flow through to BigQuery console tables/views
     relation: true
-    # columns: true #TODO: 0.17.0 has an error with persist_docs and interpets it as unused
+    columns: true
   jaffle_shop:
     core:
       materialized: table #https://docs.getdbt.com/docs/materializations
