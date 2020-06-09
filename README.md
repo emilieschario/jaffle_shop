@@ -151,14 +151,18 @@ dbt docs serve
 # build the docker image locally and tag it to eventually push to container registry
 # does not take into account gitignore constraints given it's built locally
 # ex: docker build . --tag gcr.io/wam-bam-258119/dbt-docs-cloud-run
-docker build . --tag gcr.io/[PROJECT-ID]/[IMAGE]
+export PROJECT_ID="wam-bam-258119"
+export IMAGE="dbt-docs-cloud-run"
+export REGION="us-central1"
+
+docker build . --tag gcr.io/$PROJECT_ID/$IMAGE
 
 # configure gcloud CLI to push to container registry
 gcloud auth configure-docker
 
 # push locally built image to container registry
 # ex: docker push gcr.io/wam-bam-258119/dbt-docs-cloud-run
-docker push gcr.io/[PROJECT-ID]/[IMAGE]
+docker push gcr.io/$PROJECT_ID/$IMAGE
 
 # deploy docker image to cloud run as a public website
 # ex:
@@ -167,11 +171,22 @@ docker push gcr.io/[PROJECT-ID]/[IMAGE]
 # --region us-central1 \
 # --platform managed \
 # --allow-unauthenticated
-gcloud beta run deploy dbt-docs-cloud-run \
-  --image gcr.io/[PROJECT-ID]/[IMAGE] \
-  --region [REGION] \
+gcloud beta run deploy $IMAGE \
+  --image gcr.io/$PROJECT_ID/$IMAGE \
+  --region $REGION \
   --platform managed \
   --allow-unauthenticated
+
+# you can also run the dbt static website from a local docker container after pulling it from the google container registry
+docker pull gcr.io/$PROJECT_ID/$IMAGE
+
+# run the container locally
+# you can also run it in the background by adding the `--detach` flag
+# ex: docker container run --publish 8080:8080 --detach gcr.io/$PROJECT_ID/$IMAGE
+docker container run --publish 8080:8080 gcr.io/$PROJECT_ID/$IMAGE
+
+# open the website in your local browser
+http://localhost:8080/
 ```
 
 11. Incremental updates to existing tables: [click here](https://docs.getdbt.com/docs/configuring-incremental-models#section-what-if-the-columns-of-my-incremental-model-change-)
