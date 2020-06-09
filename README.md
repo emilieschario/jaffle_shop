@@ -110,7 +110,7 @@ dbt run --model source:dbt_bq_example.raw_orders+
 
 7. Test the output of the models
 
-> Note: runs through all the tests defined in these specific file: [models/core/schema.yml](/models/core/schema.yml), [models/staging/schema.yml](/models/staging/schema.yml)
+> Note: runs through all the tests defined in these specific files: [models/core/schema.yml](/models/core/schema.yml), [models/staging/schema.yml](/models/staging/schema.yml)
 
 > Note: follow this [git guide](https://github.com/fishtown-analytics/corp/blob/master/git-guide.md) for merge requests
 
