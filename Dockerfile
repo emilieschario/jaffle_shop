@@ -9,5 +9,9 @@ COPY ./target/ /usr/share/nginx/html
 # Copy the nginx configuration template to the nginx config directory
 COPY ./docs_website/default.template /etc/nginx/conf.d/default.template
 
+# must be defined to run container locally, but not needed for cloud run
+ENV PORT=8080
+EXPOSE 8080
+
 # Substitute the environment variables and generate the final config
 CMD envsubst < /etc/nginx/conf.d/default.template > /etc/nginx/conf.d/default.conf && exec nginx -g 'daemon off;'

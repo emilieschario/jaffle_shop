@@ -33,7 +33,7 @@ models:
         description: Total value (AUD) of a customer's orders
 
   - name: fct_orders
-    description: This table has basic information about orders, as well as some derived facts based on payments
+    description: This table has basic information about orders, as well as some derived facts based on payments. '{{ doc("orders_status") }}'
 
     columns:
       - name: order_id
@@ -54,7 +54,7 @@ models:
         description: Date (UTC) that the order was placed
 
       - name: status
-        description: '{{ doc("orders_status") }}'
+        description: See the table description
         tests:
           - accepted_values:
               values:

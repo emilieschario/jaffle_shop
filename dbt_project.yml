@@ -1,7 +1,8 @@
 name: "jaffle_shop"
 # Specify a requirement on an _exact_ version of dbt
-require-dbt-version: "0.15.1"
-version: "0.1"
+require-dbt-version: 0.17.0
+version: 0.1
+# config-version: 2 #TODO: 0.17.0 has an error with persist_docs and interpets it as unused
 profile: "jaffle_shop"
 source-paths: ["models"]
 analysis-paths: ["analysis"]
@@ -32,8 +33,10 @@ quoting:
 
 # https://docs.getdbt.com/docs/configuring-incremental-models
 models:
+  # TODO: 0.17.0 has an error with persist_docs and interpets it as unused
   persist_docs: #allows for docs to flow through to BigQuery console tables/views
     relation: true
+    columns: true
   jaffle_shop:
     core:
       materialized: table #https://docs.getdbt.com/docs/materializations
