@@ -27,7 +27,7 @@ jobs:
       - uses: actions/setup-python@v1
         with:
           python-version: "3.7.x"
-      - run: pip3 install requirements.txt
+      - run: pip3 install ./requirements.txt
       - run: dbt --version
       - run: 'echo "$KEYFILE" > ./.gcloud/service_account.json'
         shell: bash
