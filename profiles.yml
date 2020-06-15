@@ -24,7 +24,7 @@ jaffle_shop:
       project: "{{ env_var('PROJECT_ID', 'wam-bam-258119') }}" # parameterize project for dbt runs based on environment variable with default project
       dataset: dbt_bq_example # You can also use "schema" here
       threads: 8 # https://docs.getdbt.com/docs/configure-your-profile#section-understanding-threads
-      keyfile: service_account.json
+      keyfile: "{{ env_var('DBT_GOOGLE_BIGQUERY_KEYFILE', 'service_account.json') }}"
       timeout_seconds: 300
       location: US # Optional, one of US or EU
       priority: interactive # interactive or batch
