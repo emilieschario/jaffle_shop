@@ -31,6 +31,12 @@ quoting:
   identifier: true
   schema: true # translates to gcp dataset
 
+seeds:
+  jaffle_shop: # you must include the project name
+    raw_orders:
+      column_types:
+        order_date: timestamp
+
 # https://docs.getdbt.com/docs/configuring-incremental-models
 models:
   # TODO: 0.17.0 has an error with persist_docs and interpets it as unused
