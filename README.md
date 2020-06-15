@@ -178,6 +178,7 @@ docker push gcr.io/$PROJECT_ID/$IMAGE
 # --allow-unauthenticated
 gcloud beta run deploy $IMAGE \
   --image gcr.io/$PROJECT_ID/$IMAGE \
+  --project "$PROJECT_ID" \
   --region $REGION \
   --platform managed \
   --allow-unauthenticated

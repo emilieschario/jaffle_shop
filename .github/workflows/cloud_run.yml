@@ -57,6 +57,7 @@ jobs:
         run: |-
           gcloud run deploy "$IMAGE-${GITHUB_REF##*/}" \
             --quiet \
+            --project "$PROJECT_ID" \
             --region "$REGION" \
             --image "gcr.io/$PROJECT_ID/$IMAGE:$GITHUB_SHA" \
             --platform "managed" \
