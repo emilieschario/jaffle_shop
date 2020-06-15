@@ -14,7 +14,7 @@ on:
 env:
   DBT_PROFILES_DIR: ./
   # DBT_DATABASE: your-gcp-project-id
-  DBT_GOOGLE_BIGQUERY_KEYFILE: ./.gcloud/service_account.json
+  DBT_GOOGLE_BIGQUERY_KEYFILE: ./service_account.json
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -29,7 +29,7 @@ jobs:
           python-version: "3.7.x"
       - run: pip3 install -r ./requirements.txt
       - run: dbt --version
-      - run: 'echo "$KEYFILE" > ./.gcloud/service_account.json'
+      - run: 'echo "$KEYFILE" > ./service_account.json'
         shell: bash
         env:
           KEYFILE: ${{secrets.DBT_GOOGLE_BIGQUERY_KEYFILE}}
