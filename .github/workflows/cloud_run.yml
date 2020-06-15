@@ -30,7 +30,7 @@ jobs:
           service_account_key: ${{secrets.DBT_GOOGLE_BIGQUERY_KEYFILE}}
           project_id: $PROJECT_ID
 
-      - name: dbt docs generate
+      # - name: dbt docs generate
       - uses: actions/setup-python@v1
         with:
           python-version: "3.7.x"
