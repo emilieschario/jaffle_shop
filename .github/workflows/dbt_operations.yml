@@ -12,8 +12,9 @@ on:
     branches: [master]
 
 env:
+  #TODO(developer): update PROJECT_ID, DBT_GOOGLE_BIGQUERY_KEYFILE
+  PROJECT_ID: "wam-bam-258119"
   DBT_PROFILES_DIR: ./
-  # DBT_DATABASE: your-gcp-project-id
   DBT_GOOGLE_BIGQUERY_KEYFILE: ./service_account.json
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
