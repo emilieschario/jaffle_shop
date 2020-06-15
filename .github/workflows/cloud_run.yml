@@ -28,9 +28,7 @@ jobs:
         with:
           version: "290.0.1"
           service_account_key: ${{secrets.DBT_GOOGLE_BIGQUERY_KEYFILE}}
-          project_id: $PROJECT_ID
-        env:
-          PROJECT_ID: $PROJECT_ID
+          project_id: "wam-bam-258119" #TODO: fix later to be env var
 
       # - name: dbt docs generate
       - uses: actions/setup-python@v1
