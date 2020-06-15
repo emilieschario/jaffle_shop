@@ -227,6 +227,8 @@ from raw_app_data.events
 
 ## GitHub Actions Workflows
 
+- Automates testing basic functionality and leaves an audit trail that this git repo contains working code
+
 | Name                                                         | Purpose                                                                    | Notes               |
 | ------------------------------------------------------------ | -------------------------------------------------------------------------- | ------------------- |
 | [`dbt_operations.yml`](.github/workflows/dbt_operations.yml) | Runs a majority of dbt commands in the above tutorial                      | See `TODOs` in file |
