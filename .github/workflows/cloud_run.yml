@@ -54,7 +54,7 @@ jobs:
           docker push gcr.io/$PROJECT_ID/$IMAGE:$GITHUB_SHA
 
       # Deploy image to Cloud Run based on branch name
-      - name: Deploy
+      - name: Deploy-Live URL can be found HERE
         run: |-
           gcloud run deploy "$IMAGE-${GITHUB_REF##*/}" \
             --quiet \
