@@ -26,9 +26,9 @@ jobs:
       # Setup gcloud CLI
       - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
         with:
-          version: "290.0.1"
+          version: "296.0.0"
           service_account_key: ${{secrets.DBT_GOOGLE_BIGQUERY_KEYFILE}}
-          project_id: "wam-bam-258119" #TODO: fix later to be env var
+          # project_id: "wam-bam-258119" #TODO: fix later to be env var
 
       # - name: dbt docs generate
       - uses: actions/setup-python@v1
@@ -41,16 +41,15 @@ jobs:
         env:
           KEYFILE: ${{secrets.DBT_GOOGLE_BIGQUERY_KEYFILE}} # add a github secret(https://help.github.com/en/actions/configuring-and-managing-workflows/creating-and-storing-encrypted-secrets#creating-encrypted-secrets-for-a-repository)
       - run: dbt debug
-      # - run: dbt docs generate
 
       # Build and push image to Google Container Registry
       # Reference: https://github.com/GoogleCloudPlatform/github-actions/blob/master/example-workflows/cloud-run/.github/workflows/cloud-run.yml
       # gcloud builds submit CLI is NOT used as it does not persist dbt docs generation run beforehand
-      - name: Build
+      - name: Build and push to Google Container Registry
         run: |-
           dbt docs generate &&
           docker build . --tag gcr.io/$PROJECT_ID/$IMAGE:$GITHUB_SHA &&
-          gcloud auth configure-docker &&
+          gcloud auth configure-docker --quiet &&
           docker push gcr.io/$PROJECT_ID/$IMAGE:$GITHUB_SHA
 
       # Deploy image to Cloud Run based on branch name
