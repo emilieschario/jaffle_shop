@@ -34,10 +34,3 @@ jobs:
         shell: bash
         env:
           KEYFILE: ${{secrets.DBT_GOOGLE_BIGQUERY_KEYFILE}} # add a github secret(https://help.github.com/en/actions/configuring-and-managing-workflows/creating-and-storing-encrypted-secrets#creating-encrypted-secrets-for-a-repository)
-      - run: dbt debug
-      - run: dbt seed --show
-      - run: dbt source snapshot-freshness
-      - run: dbt run
-      - run: dbt test
-      - run: dbt snapshot
-      - run: dbt docs generate
