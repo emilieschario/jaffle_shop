@@ -2,7 +2,7 @@ name: Build and Deploy dbt docs static website to Cloud Run
 
 on:
   push:
-    branches: [master, feature-github-actions]
+    branches: [master]
   pull_request:
     branches: [master]
 
