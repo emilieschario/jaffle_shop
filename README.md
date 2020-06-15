@@ -1,4 +1,4 @@
-## dbt models for `jaffle_shop`
+# dbt models for `jaffle_shop`
 
 ![dbt operations](https://github.com/sungchun12/dbt_bigquery_example/workflows/dbt%20operations/badge.svg) ![Build and Deploy dbt docs static website to Cloud Run](https://github.com/sungchun12/dbt_bigquery_example/workflows/Build%20and%20Deploy%20dbt%20docs%20static%20website%20to%20Cloud%20Run/badge.svg)
 
@@ -224,6 +224,13 @@ from raw_app_data.events
 ```
 
 > Note: [dbt style guide](https://github.com/fishtown-analytics/corp/blob/master/dbt_coding_conventions.md)
+
+## GitHub Actions Workflows
+
+| Name                                                         | Purpose                                                                    | Notes               |
+| ------------------------------------------------------------ | -------------------------------------------------------------------------- | ------------------- |
+| [`dbt_operations.yml`](.github/workflows/dbt_operations.yml) | Runs a majority of dbt commands in the above tutorial                      | See `TODOs` in file |
+| [`cloud_run.yml`](.github/workflows/cloud_run.yml)           | Deploys dbt docs static website similar to what's included in the repo URL | See `TODOs` in file |
 
 ### What is a jaffle?
 
