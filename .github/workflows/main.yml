@@ -1,33 +1,37 @@
 # This is a basic workflow to help you get started with Actions
+# Example reference for running dbt for BigQuery: https://gist.github.com/troyharvey/d61ebe704395c925bf9448183e99af3e
 
-name: CI
+name: dbt
 
 # Controls when the action will run. Triggers the workflow on push or pull request
 # events but only for the master branch
 on:
   push:
-    branches: [ master ]
+    branches: [master, feature-github-actions]
   pull_request:
-    branches: [ master ]
+    branches: [master]
+
+env:
+  DBT_PROFILES_DIR: ./
+  # DBT_DATABASE: your-gcp-project-id
+  DBT_GOOGLE_BIGQUERY_KEYFILE: ./.gcloud/service_account.json
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
-  build:
-    # The type of runner that the job will run on
+  dbt:
+    name: dbt
     runs-on: ubuntu-latest
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-    # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-    - uses: actions/checkout@v2
-
-    # Runs a single command using the runners shell
-    - name: Run a one-line script
-      run: echo Hello, world!
-
-    # Runs a set of commands using the runners shell
-    - name: Run a multi-line script
-      run: |
-        echo Add other actions to build,
-        echo test, and deploy your project.
+      - uses: actions/checkout@master
+      - uses: actions/setup-python@v1
+        with:
+          python-version: "3.7.x"
+      - run: pip3 install requirements.txt
+      - run: dbt --version
+      - run: 'echo "$KEYFILE" > ./.gcloud/service_account.json'
+        shell: bash
+        env:
+          KEYFILE: ${{secrets.DBT_GOOGLE_BIGQUERY_KEYFILE}}
+      - run: dbt run
+      - run: dbt test
