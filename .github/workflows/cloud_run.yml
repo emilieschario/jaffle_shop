@@ -7,11 +7,11 @@ on:
     branches: [master]
 
 env:
+  #TODO(developer): update PROJECT_ID, REGION, IMAGE
   PROJECT_ID: "wam-bam-258119"
   REGION: "us-central1"
   IMAGE: "dbt-docs-cloud-run"
   DBT_PROFILES_DIR: ./
-  # DBT_DATABASE: your-gcp-project-id
   DBT_GOOGLE_BIGQUERY_KEYFILE: ./service_account.json
 
 jobs:
@@ -44,6 +44,8 @@ jobs:
       # - run: dbt docs generate
 
       # Build and push image to Google Container Registry
+      # Reference: https://github.com/GoogleCloudPlatform/github-actions/blob/master/example-workflows/cloud-run/.github/workflows/cloud-run.yml
+      # gcloud builds submit CLI is NOT used as it does not persist dbt docs generation run beforehand
       - name: Build
         run: |-
           dbt docs generate &&
