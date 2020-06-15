@@ -49,7 +49,7 @@ jobs:
           dbt docs generate &&
           docker build . --tag gcr.io/$PROJECT_ID/$IMAGE:$GITHUB_SHA &&
           gcloud auth configure-docker &&
-          docker push gcr.io/$PROJECT_ID/$IMAGE:$GITHUB_SHA &&
+          docker push gcr.io/$PROJECT_ID/$IMAGE:$GITHUB_SHA
 
       # Deploy image to Cloud Run based on branch name
       - name: Deploy
