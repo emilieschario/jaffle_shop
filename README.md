@@ -1,6 +1,6 @@
 ## dbt models for `jaffle_shop`
 
-![dbt](https://github.com/sungchun12/dbt_bigquery_example/workflows/dbt/badge.svg)
+![dbt operations](https://github.com/sungchun12/dbt_bigquery_example/workflows/dbt/badge.svg) ![Build and Deploy dbt docs static website to Cloud Run](https://github.com/sungchun12/dbt_bigquery_example/workflows/Build%20and%20Deploy%20dbt%20docs%20static%20website%20to%20Cloud%20Run/badge.svg)
 
 `jaffle_shop` is a fictional ecommerce store. This dbt project transforms raw
 data from an app database into a customers and orders model ready for analytics.
