@@ -2,6 +2,7 @@
 # setup IAM roles: https://docs.getdbt.com/docs/profile-bigquery#section-required-permissions
 
 jaffle_shop:
+  # use the below for oauth authenticated dbt runs
   # target: dev
   # outputs:
   #   dev:
