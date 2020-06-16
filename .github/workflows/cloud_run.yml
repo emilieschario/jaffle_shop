@@ -28,9 +28,8 @@ jobs:
         with:
           version: "296.0.0"
           service_account_key: ${{secrets.DBT_GOOGLE_BIGQUERY_KEYFILE}}
-          # project_id: "wam-bam-258119" #TODO: fix later to be env var
 
-      # - name: dbt docs generate
+      # Setup dbt configs
       - uses: actions/setup-python@v1
         with:
           python-version: "3.7.x"
@@ -39,11 +38,10 @@ jobs:
       - run: 'echo "$KEYFILE" > ./service_account.json' # persist file in root dir
         shell: bash
         env:
-          KEYFILE: ${{secrets.DBT_GOOGLE_BIGQUERY_KEYFILE}} # add a github secret(https://help.github.com/en/actions/configuring-and-managing-workflows/creating-and-storing-encrypted-secrets#creating-encrypted-secrets-for-a-repository)
+          KEYFILE: ${{secrets.DBT_GOOGLE_BIGQUERY_KEYFILE}} # add a github secret
       - run: dbt debug
 
       # Build and push image to Google Container Registry
-      # Reference: https://github.com/GoogleCloudPlatform/github-actions/blob/master/example-workflows/cloud-run/.github/workflows/cloud-run.yml
       # gcloud builds submit CLI is NOT used as it does not persist dbt docs generation run beforehand
       - name: Build and push to Google Container Registry
         run: |-
