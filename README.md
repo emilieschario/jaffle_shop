@@ -1,6 +1,6 @@
 # dbt models for `jaffle_shop`
 
-![dbt operations](https://github.com/sungchun12/dbt_bigquery_example/workflows/dbt%20operations/badge.svg) ![Build and Deploy dbt docs static website to Cloud Run](https://github.com/sungchun12/dbt_bigquery_example/workflows/Build%20and%20Deploy%20dbt%20docs%20static%20website%20to%20Cloud%20Run/badge.svg)
+![dbt operations](https://github.com/sungchun12/dbt_bigquery_example/workflows/dbt%20operations/badge.svg) ![Cloud Run Website](https://github.com/sungchun12/dbt_bigquery_example/workflows/Build%20and%20Deploy%20dbt%20docs%20static%20website%20to%20Cloud%20Run/badge.svg)
 
 `jaffle_shop` is a fictional ecommerce store. This dbt project transforms raw
 data from an app database into a customers and orders model ready for analytics.
@@ -178,7 +178,7 @@ docker push gcr.io/$PROJECT_ID/$IMAGE
 # --allow-unauthenticated
 gcloud beta run deploy $IMAGE \
   --image gcr.io/$PROJECT_ID/$IMAGE \
-  --project "$PROJECT_ID" \
+  --project $PROJECT_ID \
   --region $REGION \
   --platform managed \
   --allow-unauthenticated
@@ -229,11 +229,18 @@ from raw_app_data.events
 ## GitHub Actions Workflows
 
 - Automates testing basic functionality and leaves an audit trail that this git repo contains working code
+- Triggers on push and pull request to master
+- You'll have to add the proper IAM permissions for more fine-grained, enabled GCP services(not required for this demo)
+- Before you run the workflows, setup below is required
 
-| Name                                                         | Purpose                                                                    | Notes               |
-| ------------------------------------------------------------ | -------------------------------------------------------------------------- | ------------------- |
-| [`dbt_operations.yml`](.github/workflows/dbt_operations.yml) | Runs a majority of dbt commands in the above tutorial                      | See `TODOs` in file |
-| [`cloud_run.yml`](.github/workflows/cloud_run.yml)           | Deploys dbt docs static website similar to what's included in the repo URL | See `TODOs` in file |
+1. [Create and download a service account key json file](https://cloud.google.com/docs/authentication/getting-started#command-line): Assumes you have project owner permissions
+2. Add a [github secret](https://help.github.com/en/actions/configuring-and-managing-workflows/creating-and-storing-encrypted-secrets#creating-encrypted-secrets-for-a-repository) named: `DBT_GOOGLE_BIGQUERY_KEYFILE`
+3. Update `TODOs` in files, especially for `PROJECT_ID`
+
+| Name                                                         | Purpose                                                                    | Notes               | References                                                                                            |
+| ------------------------------------------------------------ | -------------------------------------------------------------------------- | ------------------- | ----------------------------------------------------------------------------------------------------- |
+| [`dbt_operations.yml`](.github/workflows/dbt_operations.yml) | Runs a majority of dbt commands in the above tutorial                      | See `TODOs` in file | [Link](https://gist.github.com/troyharvey/d61ebe704395c925bf9448183e99af3e)                           |
+| [`cloud_run.yml`](.github/workflows/cloud_run.yml)           | Deploys dbt docs static website similar to what's included in the repo URL | See `TODOs` in file | [Link](https://github.com/GoogleCloudPlatform/github-actions/tree/master/example-workflows/cloud-run) |
 
 ### What is a jaffle?
 
