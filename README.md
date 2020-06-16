@@ -64,11 +64,13 @@ pip install -r requirements.txt
 # replace the below with your own repo directory
 export DBT_PROFILES_DIR=$(pwd)
 
+# setup a Google Cloud Project ID
+export PROJECT_ID="your-project-id"
 
 # connect to GCP
 gcloud auth application-default login --scopes=https://www.googleapis.com/auth/userinfo.email,https://www.googleapis.com/auth/cloud-platform,https://www.googleapis.com/auth/drive.readonly
 
-# check if the dbt files and connection work
+# check if the dbt files and connection work using oauth as the default
 dbt debug
 ```
 
