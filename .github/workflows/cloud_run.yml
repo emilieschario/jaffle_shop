@@ -1,4 +1,4 @@
-name: Build and Deploy dbt docs static website to Cloud Run
+name: Cloud Run Website
 
 on:
   push:
