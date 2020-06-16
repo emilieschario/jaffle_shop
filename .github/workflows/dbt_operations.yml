@@ -18,6 +18,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # setup dbt configs
       - uses: actions/checkout@master
       - uses: actions/setup-python@v1
         with:
@@ -28,6 +29,7 @@ jobs:
         shell: bash
         env:
           KEYFILE: ${{secrets.DBT_GOOGLE_BIGQUERY_KEYFILE}} # add a github secret
+      # run actual dbt commands
       - run: dbt debug --target service_account_runs
       - run: dbt seed --full-refresh --show --target service_account_runs
       - run: dbt source snapshot-freshness --target service_account_runs
