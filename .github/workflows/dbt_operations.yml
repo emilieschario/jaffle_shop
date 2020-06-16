@@ -1,0 +1,38 @@
+name: dbt operations
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+env:
+  #TODO(developer): update PROJECT_ID
+  PROJECT_ID: "wam-bam-258119"
+  DBT_PROFILES_DIR: ./
+  DBT_GOOGLE_BIGQUERY_KEYFILE: ./service_account.json
+
+jobs:
+  dbt:
+    name: dbt
+    runs-on: ubuntu-latest
+
+    steps:
+      # setup dbt configs
+      - uses: actions/checkout@master
+      - uses: actions/setup-python@v1
+        with:
+          python-version: "3.7.x"
+      - run: pip3 install -r ./requirements.txt
+      - run: dbt --version
+      - run: 'echo "$KEYFILE" > ./service_account.json' # persist file in root dir
+        shell: bash
+        env:
+          KEYFILE: ${{secrets.DBT_GOOGLE_BIGQUERY_KEYFILE}} # add a github secret
+      # run actual dbt commands
+      - run: dbt debug --target service_account_runs
+      - run: dbt seed --full-refresh --show --target service_account_runs
+      - run: dbt source snapshot-freshness --target service_account_runs
+      - run: dbt run --target service_account_runs
+      - run: dbt test --target service_account_runs
+      - run: dbt snapshot --target service_account_runs
