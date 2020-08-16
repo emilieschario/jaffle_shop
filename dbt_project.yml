@@ -33,6 +33,7 @@ quoting:
 
 seeds:
   jaffle_shop: # you must include the project name
+    # +project: lumpy-space-prince # if you want to create a model in a separate project
     raw_orders:
       +column_types:
         order_date: timestamp

@@ -12,6 +12,8 @@ order_payments as (
 
 ),
 
+-- {{ config(database="lumpy-space-prince") }} -- if you want to create a model in a separate project
+
 final as (
 
     select
