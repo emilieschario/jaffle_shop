@@ -42,8 +42,9 @@ git clone https://github.com/sungchun12/dbt_bigquery_example.git
 cd dbt_bigquery_example/
 
 # setup python virtual environment locally
-python3 -m venv py37_venv
-source py37_venv/bin/activate
+# py385 = python 3.8.5
+python3 -m venv py385_venv
+source py385_venv/bin/activate
 pip install --upgrade pip
 pip install -r requirements.txt
 ```
