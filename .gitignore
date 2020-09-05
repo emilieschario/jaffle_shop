@@ -5,7 +5,7 @@ logs/
 **/.DS_Store
 
 #ignore virtual env
-py37_venv
+*_venv
 **/service_account.json
 **/bigquery-logs-writer-key.json
 *.pyc
