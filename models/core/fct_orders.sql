@@ -12,7 +12,12 @@ order_payments as (
 
 ),
 
--- {{ config(database="lumpy-space-prince") }} -- if you want to create a model in a separate project
+/* {--{ config(database="lumpy-space-prince") }--} If you want to create a model in a separate project, 
+keep in mind that the "--" is added between the curly braces as dbt interpets this 
+commented out code as formal jinja templating 
+to be compiled into a sql query for a separate project.
+To make this work, you will need to remove the "--" between the curly braces 
+and replace "lumpy-space-prince" with your BigQuery dataset. */
 
 final as (
 
