@@ -21,12 +21,19 @@ jobs:
       - uses: actions/checkout@master
       - uses: actions/setup-python@v1
         with:
-          python-version: "3.7.x"
+          python-version: "3.8.x"
       - run: pip3 install dbt
       - run: dbt --version
         shell: bash
 
       - run: dbt debug
+          
+      # install dependencies
+      - run: dbt deps
+      
+      # we always full refresh incase the schema changed.
+      - run: dbt seed --target ${TARGET} --select state:modified --state . --full-refresh
 
-      - run: dbt run --target ${TARGET}
-      - run: dbt test --target ${TARGET}
+      # run and test all modified models plus their dependencies
+      - run: dbt run --target ${TARGET} --models state:modified+ --state .
+      - run: dbt test --target ${TARGET} --models state:modified+ --state .
