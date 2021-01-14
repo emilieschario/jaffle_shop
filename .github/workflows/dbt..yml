@@ -8,6 +8,10 @@ on:
 env:
   DBT_PROFILES_DIR: ./
   TARGET: CI
+  SNOWFLAKE_ACCOUNT: ${{secrets.SNOWFLAKE_ACCOUNT}}
+  SNOWFLAKE_USER: ${{secrets.SNOWFLAKE_USER}}
+  SNOWFLAKE_PASSWORD: ${{secrets.SNOWFLAKE_PASSWORD}}
+
 jobs:
   dbt:
     name: dbt
@@ -21,10 +25,6 @@ jobs:
       - run: pip3 install dbt
       - run: dbt --version
         shell: bash
-        env:
-          SNOWFLAKE_ACCOUNT: ${{secrets.SNOWFLAKE_ACCOUNT}}
-          SNOWFLAKE_USER: ${{secrets.SNOWFLAKE_USER}}
-          SNOWFLAKE_PASSWORD: ${{secrets.SNOWFLAKE_PASSWORD}}
 
       - run: dbt debug
 
