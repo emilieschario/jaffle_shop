@@ -11,7 +11,7 @@ jaffle_shop:
 
       role: TRANSFORMER
       database: ANALYTICS
-      warehouse: COMPUTE_SH
+      warehouse: COMPUTE_WH
       schema: CI
       threads: 16
       client_session_keep_alive: False
