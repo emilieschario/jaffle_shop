@@ -1,0 +1,32 @@
+name: dbt
+
+on:
+  push:
+    branches:
+      - master
+
+env:
+  DBT_PROFILES_DIR: ./
+  TARGET: CI
+jobs:
+  dbt:
+    name: dbt
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@master
+      - uses: actions/setup-python@v1
+        with:
+          python-version: "3.7.x"
+      - run: pip3 install dbt
+      - run: dbt --version
+        shell: bash
+        env:
+          SNOWFLAKE_ACCOUNT: ${{secrets.SNOWFLAKE_ACCOUNT}}
+          SNOWFLAKE_USER: ${{secrets.SNOWFLAKE_USER}}
+          SNOWFLAKE_PASSWORD: ${{secrets.SNOWFLAKE_PASSWORD}}
+
+      - run: dbt debug
+
+      - run: dbt run --target ${TARGET}
+      - run: dbt test --target ${TARGET}
