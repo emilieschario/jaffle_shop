@@ -33,9 +33,12 @@ jobs:
           python-version: "3.8.x"
 
       - run: pip3 install dbt
+      - run: pip3 install sqlfluff
+
       - run: dbt --version
         shell: bash
 
+      - run: sqlfluff lint
           
       # install dependencies
       - run: dbt deps

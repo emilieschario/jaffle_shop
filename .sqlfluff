@@ -1,0 +1,19 @@
+[sqlfluff]
+verbose = 1
+nocolor = False
+dialect = snowflake
+templater = jinja
+rules = None
+exclude_rules = L001,L029
+recurse = 0
+output_line_length = 1000
+
+[sqlfluff:rules]
+tab_space_size = 4
+
+
+[sqlfluff:rules:L010]
+capitalization_policy = lower
+
+[sqlfluff:rules:L016]
+max_line_length = 150
