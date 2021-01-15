@@ -40,6 +40,8 @@ jobs:
       # install dependencies
       - run: dbt deps
 
+      - run: dbt compile
+
       # get the latest manifest
       - run: aws s3 cp s3://${BUCKET}/jaffle_shop/manifest.json .
       
