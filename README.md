@@ -69,7 +69,7 @@ export DBT_PROFILES_DIR=$(pwd)
 export PROJECT_ID="your-project-id"
 
 # connect to GCP
-gcloud auth application-default login --scopes=https://www.googleapis.com/auth/userinfo.email,https://www.googleapis.com/auth/cloud-platform,https://www.googleapis.com/auth/drive.readonly
+gcloud auth application-default login
 
 # check if the dbt files and connection work using oauth as the default
 dbt debug
