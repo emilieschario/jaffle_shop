@@ -8,7 +8,7 @@ on:
 
 env:
   #TODO(developer): update PROJECT_ID
-  PROJECT_ID: "wam-bam-258119"
+  PROJECT_ID: "dvc-demo-297316"
   DBT_PROFILES_DIR: ./
   DBT_GOOGLE_BIGQUERY_KEYFILE: ./service_account.json
 
@@ -22,7 +22,7 @@ jobs:
       - uses: actions/checkout@master
       - uses: actions/setup-python@v1
         with:
-          python-version: "3.7.x"
+          python-version: "3.8.x"
       - run: pip3 install -r ./requirements.txt
       - run: dbt --version
       - run: 'echo "$KEYFILE" > ./service_account.json' # persist file in root dir
