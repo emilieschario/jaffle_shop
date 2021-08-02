@@ -32,22 +32,23 @@ jobs:
         with:
           python-version: "3.8.x"
 
-      - run: pip3 install dbt
-      - run: pip3 install sqlfluff
+      - run: pip3 install dbt[snowflake]
+      - run: pip3 install sqlfluff[dbt]
 
       - run: dbt --version
         shell: bash
 
-      - run: sqlfluff lint
-          
+      # - run: sqlfluff lint
+
       # install dependencies
       - run: dbt deps
+        if:
 
       - run: dbt compile
 
       # get the latest manifest
       - run: aws s3 cp s3://${BUCKET}/jaffle_shop/manifest.json .
-      
+
       # we always full refresh incase the schema changed.
       - run: dbt seed --target ${TARGET} --select state:modified --state . --full-refresh
 
