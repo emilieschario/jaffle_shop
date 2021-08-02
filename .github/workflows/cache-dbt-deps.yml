@@ -5,6 +5,11 @@ on:
     branches:
       - master
 
+jobs:
+
+  master_cache:
+    name: "Master Cache"
+
     steps:
       - name: Checkout Code
         uses: actions/checkout@v2
