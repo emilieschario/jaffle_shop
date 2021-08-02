@@ -1,0 +1,23 @@
+name: Cache dbt deps
+
+on:
+  push:
+    branches:
+      - master
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
+      - name: Cache DBT Dependencies
+        id: cache-dbt-deps
+        uses: actions/cache@v2
+        with:
+          path: snowflake/snowflake_dbt/dbt_modules/
+          key: dbt-deps-${{ hashFiles('**/packages.yml') }}
+          restore-keys: |
+            dbt-deps-
+
+      - name: DBT deps
+        run: dbt deps
+        if: steps.cache-dbt-deps.outputs.cache-hit != 'true'
