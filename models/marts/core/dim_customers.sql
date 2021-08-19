@@ -4,7 +4,7 @@ with customers as (
 
 ),
 
-customer_orders as (
+customer_orders as (;lk;lk;
 
     select * from {{ ref('customer_orders') }}
 
