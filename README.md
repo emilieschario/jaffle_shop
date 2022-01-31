@@ -1,3 +1,5 @@
+Update Jan 31
+
 ## dbt models for `jaffle_shop`!!!
 
 `jaffle_shop` is a fictional ecommerce store. This dbt project transforms raw
