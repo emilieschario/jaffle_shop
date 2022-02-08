@@ -1,4 +1,4 @@
-Update Jan 31
+Update Feb 8
 
 ## dbt models for `jaffle_shop`!!!
 
