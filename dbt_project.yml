@@ -1,8 +1,8 @@
 
 name: 'jaffle_shop'
-version: 2
+version: 2.0
 
-config-version: 2.0
+config-version: 2
 profile: 'user'
 source-paths: ["models"]
 analysis-paths: ["analysis"]
