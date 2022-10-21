@@ -1,9 +1,9 @@
 
 name: 'jaffle_shop'
-version: 1.0.0
+version: 2
 
-config-version: 2
-profile: 'jaffle_shop'
+config-version: 2.0
+profile: 'user'
 source-paths: ["models"]
 analysis-paths: ["analysis"]
 test-paths: ["tests"]
@@ -22,3 +22,6 @@ models:
       materialized: table
       staging:
         materialized: view
+
+vars:
+  test_var: '2022-03-15T10:00:00'
