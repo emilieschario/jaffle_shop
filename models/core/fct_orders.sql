@@ -41,4 +41,4 @@ final as (
 
 )
 
-select * from final limit 6
+select * from final limit 10
